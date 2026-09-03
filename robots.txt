@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /koszonjuk.html
+Disallow: /admin/
 
 Sitemap: https://zsedelydavid.hu/sitemap.xml

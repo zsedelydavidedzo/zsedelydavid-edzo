@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Zsédely Dávid</title>
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body class="adm">
+
+<!-- ---------- Belépés ---------- -->
+<div class="gate" id="gate">
+  <form class="gate-box" id="gateForm">
+    <span class="mark" aria-hidden="true">ZD</span>
+    <h1>Admin belépés</h1>
+    <p>Add meg a jelszót a tartalom szerkesztéséhez.</p>
+    <label for="pw">Jelszó</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <button class="btn btn-primary" type="submit">Belépés</button>
+    <p class="err" id="gateErr" hidden></p>
+    <a class="back" href="/">← Vissza a weboldalra</a>
+  </form>
+</div>
+
+<!-- ---------- Szerkesztő ---------- -->
+<div class="app" id="app" hidden>
+  <header class="abar">
+    <div class="abar-l">
+      <span class="mark" aria-hidden="true">ZD</span>
+      <div>
+        <strong>Tartalom szerkesztő</strong>
+        <span id="status">Betöltés…</span>
+      </div>
+    </div>
+    <div class="abar-r">
+      <a class="btn btn-ghost btn-sm" href="/" target="_blank" rel="noopener">Oldal megnyitása ↗</a>
+      <button class="btn btn-ghost btn-sm" id="reload" type="button">Elvetés</button>
+      <button class="btn btn-primary btn-sm" id="save" type="button" disabled>Mentés és közzététel</button>
+    </div>
+  </header>
+
+  <div class="alayout">
+    <aside class="aside" id="aside"></aside>
+    <main class="amain">
+      <div class="notice" id="notice" hidden></div>
+      <div id="editor"></div>
+    </main>
+  </div>
+</div>
+
+<script src="/admin/admin.js"></script>
+</body>
+</html>
