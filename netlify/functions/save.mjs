@@ -74,6 +74,21 @@ export default async (req) => {
     return json({ error: 'Hibás jelszó.' }, 401);
   }
 
+  // ---- betöltés: a repóban lévő NYERS forrás (nem az élő, feldolgozott oldal) ----
+  if (body.action === 'load') {
+    const path = typeof body.path === 'string' ? body.path : 'index.html';
+    if (!/^(index|adatkezeles|aszf|koszonjuk|404)\.html$/.test(path)) {
+      return json({ error: `Nem engedélyezett útvonal: ${path}` }, 400);
+    }
+    try {
+      const f = await gh(TOKEN, `/repos/${REPO}/contents/${path}?ref=${BRANCH}`);
+      const content = Buffer.from(f.content, 'base64').toString('utf-8');
+      return json({ ok: true, path, content, sha: f.sha });
+    } catch (err) {
+      return json({ error: String(err.message || err) }, 502);
+    }
+  }
+
   const files = Array.isArray(body.files) ? body.files : [];
   if (!files.length) return json({ error: 'Nincs menteni való fájl.' }, 400);
 

@@ -7,7 +7,6 @@
   'use strict';
 
   var API = '/api/save';
-  var PAGE = '/index.html';
 
   var pw = '';
   var doc = null;          // a beolvasott index.html DOM-ja
@@ -60,18 +59,28 @@
   }
 
   /* --------------------------------------------------------- betöltés --- */
+  /* A forrást a GitHub repóból töltjük, NEM az élő oldalról: az élő HTML-t a
+     Netlify kiegészíti (statisztikai script, átírt linkek), és az visszamentve
+     minden alkalommal beépülne a forrásba. */
   function load() {
     statusEl.textContent = 'Betöltés…';
-    return fetch(PAGE + '?t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-      .then(function (html) {
-        doc = new DOMParser().parseFromString(html, 'text/html');
+    return fetch(API, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'load', path: 'index.html', password: pw })
+    })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok) {
+          var e = new Error(res.j.error || ('HTTP ' + res.status));
+          e.status = res.status;
+          throw e;
+        }
+        doc = new DOMParser().parseFromString(res.j.content, 'text/html');
         build();
         setDirty(false);
         statusEl.textContent = 'Betöltve — ' + fields.length + ' szövegmező, ' + images.length + ' kép';
-      })
-      .catch(function (e) {
-        notice('Nem sikerült betölteni az oldalt: ' + e.message, 'err');
+        return true;
       });
   }
 
@@ -321,6 +330,10 @@
       }
     });
 
+    // biztonsági háló: ami nem a mi forrásunkból való, ne kerüljön be a repóba
+    doc.querySelectorAll('script[src*="/.netlify/"], script[src*="netlify.app"]')
+       .forEach(function (s) { s.remove(); });
+
     var html = '<!doctype html>\n' + doc.documentElement.outerHTML + '\n';
     files.push({ path: 'index.html', content: html, encoding: 'utf-8' });
     return files;
@@ -369,11 +382,24 @@
     if (!val) return;
     pw = val;
     try { sessionStorage.setItem('zd_pw', pw); } catch (_) {}
-    gate.hidden = true; app.hidden = false;
+    var btn = $('#gateForm button');
+    var err = $('#gateErr');
+    err.hidden = true;
+    btn.disabled = true; btn.textContent = 'Belépés…';
+
     load().then(function () {
+      btn.disabled = false; btn.textContent = 'Belépés';
+      gate.hidden = true; app.hidden = false;
       notice('A szövegeket közvetlenül itt szerkesztheted. A <strong>Mentés és közzététel</strong> gomb '
-        + 'elmenti a változásokat, és a weboldal 1–2 percen belül frissül. '
-        + 'A jelszó helyességét csak mentéskor ellenőrzi a szerver.', 'info');
+        + 'elmenti a változásokat, és a weboldal 1–2 percen belül frissül.', 'info');
+    }).catch(function (e) {
+      btn.disabled = false; btn.textContent = 'Belépés';
+      pw = '';
+      try { sessionStorage.removeItem('zd_pw'); } catch (_) {}
+      err.textContent = (e.status === 401)
+        ? 'Hibás jelszó.'
+        : 'Nem sikerült betölteni: ' + e.message;
+      err.hidden = false;
     });
   });
 

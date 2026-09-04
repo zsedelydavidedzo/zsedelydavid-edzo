@@ -381,8 +381,8 @@ p{color:var(--muted);font-size:clamp(15.5px,1.15vw,17px)}
 .footer{border-top:1px solid var(--line);padding:clamp(44px,5vw,60px) 0 0}
 .f-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding-bottom:44px}
 .f-brand p{font-size:14.5px;max-width:290px;margin-top:18px}
-.f-col h2{font-family:var(--display);font-weight:700;font-size:15px;text-transform:uppercase;
-  letter-spacing:.12em;margin-bottom:18px}
+.f-col .f-ttl{display:block;font-family:var(--display);font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.12em;margin-bottom:18px;color:#fff}
 .f-col a{display:block;color:var(--muted);text-decoration:none;font-size:14.5px;margin-bottom:11px;
   transition:color .25s, transform .25s var(--ease)}
 .f-col a:hover{color:var(--accent);transform:translateX(3px)}

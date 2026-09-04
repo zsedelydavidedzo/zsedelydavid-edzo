@@ -1,6 +1,11 @@
+# https://zsedelydavid.hu/ — Zsédely Dávid, személyi edző Győr
+
 User-agent: *
 Allow: /
-Disallow: /koszonjuk.html
 Disallow: /admin/
+Disallow: /koszonjuk
+Disallow: /koszonjuk.html
+Disallow: /404.html
+Disallow: /api/
 
 Sitemap: https://zsedelydavid.hu/sitemap.xml

@@ -36,14 +36,74 @@
 
 # HTML: mindig friss
 [[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cache-Control = "no-store"
+
+[[headers]]
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
 # ---------- Átirányítások ----------
-# www → csupasz domain (301)
+# Cél: minden tartalom PONTOSAN EGY URL-en legyen elérhető.
+# Sorrend számít: a Netlify felülről lefelé értékel, az első találat nyer.
+
+# 1. www → csupasz domain
 [[redirects]]
   from = "https://www.zsedelydavid.hu/*"
   to = "https://zsedelydavid.hu/:splat"
   status = 301
   force = true
+
+# 2. Netlify aldomain → saját domain (különben duplikált tartalom indexelődik)
+[[redirects]]
+  from = "https://zsedelydavid.netlify.app/*"
+  to = "https://zsedelydavid.hu/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://zsedelydavid.netlify.app/*"
+  to = "https://zsedelydavid.hu/:splat"
+  status = 301
+  force = true
+
+# 3. .html végű URL-ek → tiszta URL (a Netlify mindkettőt kiszolgálná)
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/adatkezeles.html"
+  to = "/adatkezeles"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/aszf.html"
+  to = "/aszf"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/koszonjuk.html"
+  to = "/koszonjuk"
+  status = 301
+  force = true
+
+# ---------- Nem-produkciós környezetek kizárása a keresőkből ----------
+[context.deploy-preview]
+  [[context.deploy-preview.headers]]
+    for = "/*"
+    [context.deploy-preview.headers.values]
+      X-Robots-Tag = "noindex, nofollow"
+
+[context.branch-deploy]
+  [[context.branch-deploy.headers]]
+    for = "/*"
+    [context.branch-deploy.headers.values]
+      X-Robots-Tag = "noindex, nofollow"
