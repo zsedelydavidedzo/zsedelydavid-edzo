@@ -95,7 +95,10 @@
 
     // csak levél-elemek, üres és admin-idegen elemek nélkül
     nodes = nodes.filter(function (el) {
-      if (!isLeaf(el)) return false;
+      var href = el.getAttribute('href');
+      var isEditableLink = el.tagName.toLowerCase() === 'a' && el.hasAttribute('data-edit')
+        && href && !/^#/.test(href);
+      if (!isLeaf(el) && !isEditableLink) return false;
       var t = (el.textContent || '').trim();
       if (!t) return false;
       if (el.closest('.logo')) return false;
@@ -158,6 +161,7 @@
     wrap.className = 'fld';
 
     var tag = el.tagName.toLowerCase();
+    var hasIcon = !!el.querySelector('svg');
     var label = ({ h1: 'Főcím', h2: 'Szekciócím', h3: 'Alcím', summary: 'Kérdés', li: 'Listaelem', p: 'Szöveg' })[tag] || 'Szöveg';
     if (el.classList.contains('eyebrow')) label = 'Kis címke';
     if (el.classList.contains('btn')) label = 'Gomb felirata';
@@ -170,28 +174,37 @@
     if (el.closest('.nav')) label = 'Menüpont';
     if (el.closest('.f-col')) label = 'Lábléc link';
     if (el.closest('.socials')) label = 'Közösségi ikon';
+    if (el.closest('.quick')) label = 'Közösségi link';
     if (el.closest('.ans')) label = 'Válasz';
     if (el.closest('.feats')) label = 'Címke';
 
     var orig = el.innerHTML;
-    var rows = Math.min(8, Math.max(1, Math.ceil(el.textContent.length / 78)));
+    var ta = null;
 
-    wrap.innerHTML = '<label>' + label + ' — <span style="color:#6E7682;text-transform:none;letter-spacing:0">'
-      + shorten(el.textContent, 46) + '</span></label>'
-      + '<textarea rows="' + rows + '"></textarea>';
+    /* Ha az elem ikont (SVG-t) tartalmaz, a teljes HTML-t (ikonnal együtt)
+       nem kínáljuk szövegmezőként — csak a link célcíme szerkeszthető lent. */
+    if (!hasIcon) {
+      var rows = Math.min(8, Math.max(1, Math.ceil(el.textContent.length / 78)));
+      wrap.innerHTML = '<label>' + label + ' — <span style="color:#6E7682;text-transform:none;letter-spacing:0">'
+        + shorten(el.textContent, 46) + '</span></label>'
+        + '<textarea rows="' + rows + '"></textarea>';
 
-    var ta = wrap.querySelector('textarea');
-    ta.value = orig.replace(/\s*\n\s*/g, ' ').trim();
+      ta = wrap.querySelector('textarea');
+      ta.value = orig.replace(/\s*\n\s*/g, ' ').trim();
 
-    var hints = [];
-    if (/<[a-z]/i.test(orig)) {
-      hints.push('Formázás megtartható: <code>&lt;span class="hl"&gt;kiemelt&lt;/span&gt;</code> · <code>&lt;br&gt;</code> sortörés.');
-    }
-    if (hints.length) {
-      var h = document.createElement('p');
-      h.className = 'hint';
-      h.innerHTML = hints.join('<br>');
-      wrap.appendChild(h);
+      var hints = [];
+      if (/<[a-z]/i.test(orig)) {
+        hints.push('Formázás megtartható: <code>&lt;span class="hl"&gt;kiemelt&lt;/span&gt;</code> · <code>&lt;br&gt;</code> sortörés.');
+      }
+      if (hints.length) {
+        var h = document.createElement('p');
+        h.className = 'hint';
+        h.innerHTML = hints.join('<br>');
+        wrap.appendChild(h);
+      }
+    } else {
+      wrap.innerHTML = '<label>' + label + ' — <span style="color:#6E7682;text-transform:none;letter-spacing:0">'
+        + shorten(el.textContent, 46) + '</span></label>';
     }
 
     /* A hivatkozás célcíme külön mezőben (Instagram, Messenger, telefon, e-mail).
@@ -210,17 +223,20 @@
       hrefInput.value = href;
       hrefInput.addEventListener('input', function () {
         var changed = hrefInput.value.trim() !== href;
-        wrap.classList.toggle('changed', changed || ta.value.trim() !== orig.replace(/\s*\n\s*/g, ' ').trim());
+        var taChanged = ta ? (ta.value.trim() !== orig.replace(/\s*\n\s*/g, ' ').trim()) : false;
+        wrap.classList.toggle('changed', changed || taChanged);
         if (changed) setDirty(true);
       });
       wrap.appendChild(hw);
     }
 
-    ta.addEventListener('input', function () {
-      var changed = ta.value.trim() !== orig.replace(/\s*\n\s*/g, ' ').trim();
-      wrap.classList.toggle('changed', changed);
-      if (changed) setDirty(true);
-    });
+    if (ta) {
+      ta.addEventListener('input', function () {
+        var changed = ta.value.trim() !== orig.replace(/\s*\n\s*/g, ' ').trim();
+        wrap.classList.toggle('changed', changed);
+        if (changed) setDirty(true);
+      });
+    }
 
     fields.push({ el: el, orig: orig, ta: ta, linkEl: linkEl, href: href, hrefInput: hrefInput });
     return wrap;
@@ -332,8 +348,10 @@
   /* ----------------------------------------------------------- mentés --- */
   function collect() {
     fields.forEach(function (f) {
-      var v = f.ta.value.trim();
-      if (v !== f.orig.replace(/\s*\n\s*/g, ' ').trim()) f.el.innerHTML = v;
+      if (f.ta) {
+        var v = f.ta.value.trim();
+        if (v !== f.orig.replace(/\s*\n\s*/g, ' ').trim()) f.el.innerHTML = v;
+      }
       if (f.hrefInput) {
         var hv = f.hrefInput.value.trim();
         if (hv && hv !== f.href) f.linkEl.setAttribute('href', hv);
