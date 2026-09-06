@@ -76,7 +76,8 @@
   function fmt(n, suffix) { return n.toLocaleString('hu-HU') + suffix; }
 
   function runCount(el) {
-    var f = parseFig(el.textContent);
+    var raw = el.textContent;
+    var f = parseFig(raw);
     if (f.num === null) return;
     var target = f.num, suffix = f.suffix;
     if (reduced) { el.textContent = fmt(target, suffix); return; }
@@ -85,7 +86,9 @@
       if (!start) start = ts;
       var p = Math.min((ts - start) / dur, 1);
       var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = fmt(Math.round(target * eased), suffix);
+      var val = Math.round(target * eased);
+      if (!isFinite(val)) { el.textContent = raw; return; }   // sose írjunk NaN-t
+      el.textContent = fmt(val, suffix);
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
