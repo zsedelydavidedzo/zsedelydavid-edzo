@@ -63,16 +63,29 @@
 
   /* ----------------------------------------- 4. Számláló a statokban --- */
   var counters = document.querySelectorAll('[data-count]');
+
+  /* Az értéket a látható szövegből olvassuk, nem attribútumból — így az
+     admin panelen átírt szám tényleg megjelenik az oldalon. */
+  function parseFig(raw) {
+    var digits = (raw || '').replace(/[^\d]/g, '');
+    return {
+      num: digits ? parseInt(digits, 10) : null,
+      suffix: (raw || '').replace(/[\d\s\u00A0]/g, '')
+    };
+  }
+  function fmt(n, suffix) { return n.toLocaleString('hu-HU') + suffix; }
+
   function runCount(el) {
-    var target = parseInt(el.getAttribute('data-count'), 10);
-    var suffix = el.getAttribute('data-suffix') || '';
-    if (reduced) { el.textContent = target + suffix; return; }
+    var f = parseFig(el.textContent);
+    if (f.num === null) return;
+    var target = f.num, suffix = f.suffix;
+    if (reduced) { el.textContent = fmt(target, suffix); return; }
     var dur = 1100, start = null;
     function step(ts) {
       if (!start) start = ts;
       var p = Math.min((ts - start) / dur, 1);
       var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(target * eased) + suffix;
+      el.textContent = fmt(Math.round(target * eased), suffix);
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
@@ -115,7 +128,72 @@
     });
   });
 
-  /* --------------------------------------------- 7. Galéria lightbox --- */
+  /* ------------------------------------------------- 7. Vélemények --- */
+  /* A névjelölő betűt a névből képezzük, hogy az admin panelen átírt
+     névhez mindig a helyes kezdőbetű tartozzon. */
+  document.querySelectorAll('.rev .who').forEach(function (who) {
+    var nameEl = who.querySelector('b');
+    var av = who.querySelector('.av');
+    if (!nameEl || !av) return;
+    var n = nameEl.textContent.trim();
+    av.textContent = n ? n.charAt(0).toUpperCase() : '·';
+  });
+
+  /* A még ki nem töltött véleményhelyek nem jelennek meg. Amint az admin
+     panelen felülírod a helykitöltő szöveget, a kártya megjelenik. */
+  document.querySelectorAll('.rev[data-empty]').forEach(function (rev) {
+    var p = rev.querySelector('blockquote p');
+    var placeholder = (rev.getAttribute('data-empty') || '').trim();
+    if (p && p.textContent.trim() === placeholder) rev.hidden = true;
+  });
+
+  /* ------------------------------------------------ 8. Kapcsolati űrlap --- */
+  var form = document.querySelector('form[name="kapcsolat"]');
+  if (form) {
+    var submitBtn = form.querySelector('button[type="submit"], .btn');
+    var origLabel = submitBtn ? submitBtn.textContent : '';
+
+    function formMsg(html, kind) {
+      var box = form.querySelector('.form-msg');
+      if (!box) {
+        box = document.createElement('p');
+        box.className = 'form-msg';
+        box.setAttribute('role', 'status');
+        form.appendChild(box);
+      }
+      box.className = 'form-msg ' + kind;
+      box.innerHTML = html;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Küldés…'; }
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+      })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          window.location.href = form.getAttribute('action') || '/koszonjuk';
+        })
+        .catch(function () {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origLabel; }
+          formMsg(
+            '<strong>Az üzenet most nem tudott elmenni.</strong> ' +
+            'Hívj a <a href="tel:+36702818799">+36 70 281 8799</a> számon, ' +
+            'írj a <a href="mailto:zsedelydavid.edzo@gmail.com">zsedelydavid.edzo@gmail.com</a> címre, ' +
+            'vagy keress Messengeren — ott azonnal válaszolok.',
+            'err'
+          );
+        });
+    });
+  }
+
+  /* --------------------------------------------- 9. Galéria lightbox --- */
   var galBtns = Array.prototype.slice.call(document.querySelectorAll('.gal button'));
   if (galBtns.length) {
     var lb = document.createElement('div');
@@ -168,7 +246,7 @@
     });
   }
 
-  /* ------------------------------------------------ 8. Év a láblécben --- */
+  /* ----------------------------------------------- 10. Év a láblécben --- */
   var ev = document.getElementById('ev');
   if (ev) ev.textContent = new Date().getFullYear();
 

@@ -83,3 +83,12 @@ body.adm{background:var(--bg);min-height:100vh}
   .aside a{padding:7px 12px;font-size:13px}
   .aside .cnt{display:none}
 }
+
+/* link célcíme */
+.hrefrow{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.hrefrow label{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted-2);margin-bottom:8px}
+.hrefrow input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;font:400 13.5px var(--mono, ui-monospace, monospace);color:var(--accent)}
+.hrefrow input:focus{outline:none;border-color:var(--accent)}
+.hrefrow .hint{margin-top:8px}

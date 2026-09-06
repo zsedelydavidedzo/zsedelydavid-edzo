@@ -53,7 +53,7 @@
   }
 
   /* Szerkeszthető-e? Csak az inline tartalmú elemek. */
-  var BLOCKISH = 'div,section,article,ul,ol,li,p,h1,h2,h3,h4,header,footer,nav,form,picture,img,button,figure,blockquote,table,details,summary,input,select,textarea,aside,main,figcaption';
+  var BLOCKISH = 'div,section,article,ul,ol,li,p,h1,h2,h3,h4,header,footer,nav,form,picture,img,svg,button,figure,blockquote,table,details,summary,input,select,textarea,aside,main,figcaption';
   function isLeaf(el) {
     return !el.querySelector(BLOCKISH);
   }
@@ -187,15 +187,33 @@
     if (/<[a-z]/i.test(orig)) {
       hints.push('Formázás megtartható: <code>&lt;span class="hl"&gt;kiemelt&lt;/span&gt;</code> · <code>&lt;br&gt;</code> sortörés.');
     }
-    if (tag === 'a' && el.getAttribute('href')) {
-      hints.push('Ez egy link. A hivatkozás címe (<code>' + shorten(el.getAttribute('href'), 40)
-        + '</code>) itt nem módosítható — azt a fejlesztő állítja be.');
-    }
     if (hints.length) {
       var h = document.createElement('p');
       h.className = 'hint';
       h.innerHTML = hints.join('<br>');
       wrap.appendChild(h);
+    }
+
+    /* A hivatkozás célcíme külön mezőben (Instagram, Messenger, telefon, e-mail).
+       Az oldalon belüli ugrásokat (#arak) nem kínáljuk fel. */
+    var linkEl = (tag === 'a') ? el : el.closest('a');
+    var href = linkEl && linkEl.getAttribute('href');
+    var hrefInput = null;
+    if (href && !/^#/.test(href)) {
+      var hw = document.createElement('div');
+      hw.className = 'hrefrow';
+      hw.innerHTML = '<label>Hova vezet</label><input type="text" spellcheck="false">'
+        + '<p class="hint">Teljes cím: <code>https://instagram.com/felhasznalonev</code> · '
+        + '<code>https://m.me/oldalneve</code> · <code>tel:+36701234567</code> · '
+        + '<code>mailto:cim@example.com</code></p>';
+      hrefInput = hw.querySelector('input');
+      hrefInput.value = href;
+      hrefInput.addEventListener('input', function () {
+        var changed = hrefInput.value.trim() !== href;
+        wrap.classList.toggle('changed', changed || ta.value.trim() !== orig.replace(/\s*\n\s*/g, ' ').trim());
+        if (changed) setDirty(true);
+      });
+      wrap.appendChild(hw);
     }
 
     ta.addEventListener('input', function () {
@@ -204,7 +222,7 @@
       if (changed) setDirty(true);
     });
 
-    fields.push({ el: el, orig: orig, ta: ta });
+    fields.push({ el: el, orig: orig, ta: ta, linkEl: linkEl, href: href, hrefInput: hrefInput });
     return wrap;
   }
 
@@ -316,6 +334,10 @@
     fields.forEach(function (f) {
       var v = f.ta.value.trim();
       if (v !== f.orig.replace(/\s*\n\s*/g, ' ').trim()) f.el.innerHTML = v;
+      if (f.hrefInput) {
+        var hv = f.hrefInput.value.trim();
+        if (hv && hv !== f.href) f.linkEl.setAttribute('href', hv);
+      }
     });
 
     var files = [];
@@ -364,7 +386,10 @@
         setDirty(false);
         document.querySelectorAll('.fld.changed').forEach(function (e) { e.classList.remove('changed'); });
         // friss állapot beolvasása kis késleltetéssel nem kell — a DOM már naprakész
-        fields.forEach(function (f) { f.orig = f.el.innerHTML; });
+        fields.forEach(function (f) {
+          f.orig = f.el.innerHTML;
+          if (f.linkEl) f.href = f.linkEl.getAttribute('href');
+        });
         images.forEach(function (r) { r.files = null; });
       })
       .catch(function (e) {
