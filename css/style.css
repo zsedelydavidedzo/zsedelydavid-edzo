@@ -348,6 +348,7 @@ p{color:var(--muted);font-size:clamp(15.5px,1.15vw,17px)}
 .contact-info li:hover{border-color:rgba(216,255,62,.35);transform:translateX(4px)}
 .contact-info .ic{width:42px;height:42px;flex:none;border-radius:12px;background:var(--accent-soft);
   color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px}
+.contact-info .ic svg{width:20px;height:20px;flex:none}
 .contact-info b{display:block;font-size:11.5px;font-weight:700;letter-spacing:.14em;
   text-transform:uppercase;color:var(--muted-2)}
 .contact-info a,.contact-info div > span{display:block;font-size:16px;color:#fff;margin-top:3px;
