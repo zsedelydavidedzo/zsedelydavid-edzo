@@ -256,6 +256,14 @@
   /* ------------------------------ 11. Facebook vélemények (lazy load) --- */
   var fbFrame = document.getElementById('fb-revs-frame');
   if (fbFrame && 'IntersectionObserver' in window) {
+    var fbFallback = function () {
+      fbFrame.innerHTML =
+        '<div class="fb-revs-fallback">' +
+        '<div class="stars" aria-label="Facebook értékelések">★★★★★</div>' +
+        '<p>A böngésződ blokkolja a Facebook-tartalmat, ezért itt nem jelenik meg élőben — de a véleményeket megnézheted közvetlenül a Facebook oldalunkon.</p>' +
+        '</div>';
+    };
+
     var fbIo = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
@@ -273,7 +281,12 @@
         fbFrame.innerHTML = '';
         fbFrame.appendChild(pageBox);
 
+        var fbCheck = window.setTimeout(function () {
+          if (!fbFrame.querySelector('iframe')) fbFallback();
+        }, 7000);
+
         if (window.FB) {
+          window.clearTimeout(fbCheck);
           window.FB.XFBML.parse(fbFrame);
         } else {
           var fbRoot = document.createElement('div');
@@ -285,6 +298,10 @@
           s.defer = true;
           s.crossOrigin = 'anonymous';
           s.src = 'https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0';
+          s.onerror = function () {
+            window.clearTimeout(fbCheck);
+            fbFallback();
+          };
           document.body.appendChild(s);
         }
       });

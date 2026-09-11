@@ -309,6 +309,9 @@ p{color:var(--muted);font-size:clamp(15.5px,1.15vw,17px)}
   display:flex;align-items:center;justify-content:center;overflow:hidden}
 .fb-revs-frame iframe{max-width:100%}
 .fb-revs-loading{color:var(--muted-2);font-size:13.5px;padding:40px 0}
+.fb-revs-fallback{padding:24px 8px;text-align:center}
+.fb-revs-fallback .stars{color:var(--accent);font-size:18px;letter-spacing:3px;margin-bottom:12px}
+.fb-revs-fallback p{font-size:13.5px;line-height:1.6;color:var(--muted);max-width:400px;margin:0 auto}
 
 /* --------------------------------------------------------------- gyik --- */
 .faq{padding:var(--sec-y) 0}
