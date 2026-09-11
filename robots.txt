@@ -7,5 +7,6 @@ Disallow: /koszonjuk
 Disallow: /koszonjuk.html
 Disallow: /404.html
 Disallow: /api/
+Disallow: /marketing/
 
 Sitemap: https://zsedelydavid.hu/sitemap.xml

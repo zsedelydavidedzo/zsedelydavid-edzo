@@ -53,6 +53,12 @@
     X-Robots-Tag = "noindex, nofollow, noarchive"
     Cache-Control = "no-store"
 
+# Hirdetési kreatívok: kikerülnek a deployra, de nem keresőnek szólnak
+[[headers]]
+  for = "/marketing/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 [[headers]]
   for = "/*.html"
   [headers.values]

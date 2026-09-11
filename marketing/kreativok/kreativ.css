@@ -1,0 +1,132 @@
+/* ==========================================================================
+   HIRDETÉSI KREATÍVOK — közös stílus
+   A tokenek a weboldal design systeméből jönnek (css/style.css)
+   ========================================================================== */
+@import url('fonts.css');
+
+:root{
+  --bg:#0B0C0E;
+  --bg-2:#101216;
+  --surface:#16181D;
+  --surface-2:#1E2129;
+  --line:rgba(255,255,255,.10);
+  --line-strong:rgba(255,255,255,.18);
+  --accent:#D8FF3E;
+  --accent-soft:rgba(216,255,62,.12);
+  --ink:#FFFFFF;
+  --muted:#9AA2AE;
+  --muted-2:#6E7682;
+  --display:'Oswald', 'Barlow Condensed', Impact, sans-serif;
+  --body:'Inter', -apple-system, Arial, sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;padding:40px;background:#26282E;
+  font-family:var(--body);-webkit-font-smoothing:antialiased;
+  display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;
+}
+img{display:block;max-width:100%}
+ul{margin:0;padding:0;list-style:none}
+h1,h2,h3,p{margin:0}
+
+/* --- a kreatív vászon: pontos hirdetési méret, ezt vágja ki a renderelő --- */
+.kreativ{
+  position:relative;overflow:hidden;flex:none;
+  background:var(--bg);color:var(--ink);
+  font-size:16px;line-height:1.6;
+}
+.k-45{width:1080px;height:1350px}   /* Meta feed 4:5 */
+.k-11{width:1080px;height:1080px}   /* Feed négyzet 1:1 */
+.k-916{width:1080px;height:1920px}  /* Story / Reels 9:16 */
+
+/* --------------------------------------------------------------- média --- */
+.k-bg{position:absolute;inset:0}
+.k-bg img{width:100%;height:100%;object-fit:cover}
+.k-scrim{position:absolute;inset:0}
+.k-scrim-top{position:absolute;left:0;right:0;top:0;height:440px;
+  background:linear-gradient(180deg, rgba(11,12,14,.88) 0%, rgba(11,12,14,.55) 42%, rgba(11,12,14,0) 100%);}
+.k-glow{
+  position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle, rgba(216,255,62,.17), rgba(216,255,62,0) 64%);
+  filter:blur(10px);
+}
+
+/* ---------------------------------------------------------- tipográfia --- */
+.k-dsp{
+  font-family:var(--display);font-weight:700;text-transform:uppercase;
+  line-height:1.02;letter-spacing:.005em;
+}
+.hl{color:var(--accent)}
+
+.k-eyebrow{
+  display:flex;align-items:center;gap:16px;
+  font-size:22px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);
+}
+.k-eyebrow::before{content:"";width:44px;height:3px;background:currentColor;flex:none}
+
+.k-lead{color:#C8CED6;font-size:30px;line-height:1.5}
+
+/* ---------------------------------------------------------------- logó --- */
+.k-logo{display:flex;align-items:center;gap:18px}
+.k-logo .mark{
+  width:66px;height:66px;flex:none;border-radius:18px;background:var(--accent);color:#0B0C0E;
+  font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:.02em;
+  display:flex;align-items:center;justify-content:center;
+}
+.k-logo strong{
+  display:block;font-family:var(--display);font-weight:700;font-size:32px;
+  text-transform:uppercase;letter-spacing:.02em;line-height:1;
+}
+.k-logo span{
+  display:block;font-size:15px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);margin-top:7px;
+}
+
+/* -------------------------------------------------------------- pipák --- */
+.k-ticks{display:flex;flex-direction:column;gap:18px}
+.k-ticks li{display:flex;align-items:center;gap:16px;font-size:26px;color:#DDE2E8;font-weight:500}
+.k-ticks li i{
+  width:38px;height:38px;flex:none;border-radius:50%;
+  background:var(--accent-soft);border:1.5px solid rgba(216,255,62,.45);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-style:normal;font-size:20px;font-weight:700;
+}
+.k-ticks.row{flex-direction:row;flex-wrap:wrap;gap:16px 34px}
+
+/* ---------------------------------------------------------------- CTA --- */
+.k-cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:14px;
+  min-height:96px;padding:0 48px;border-radius:999px;
+  background:var(--accent);color:#0B0C0E;
+  font-size:30px;font-weight:700;letter-spacing:.01em;
+  box-shadow:0 18px 50px -18px rgba(216,255,62,.6);
+}
+.k-cta .arrow{font-size:30px;line-height:1}
+.k-url{
+  font-family:var(--display);font-weight:600;text-transform:uppercase;
+  letter-spacing:.14em;font-size:26px;color:#fff;
+}
+.k-url small{display:block;font-family:var(--body);font-weight:500;font-size:15px;
+  letter-spacing:.18em;color:var(--muted-2);margin-top:6px}
+
+/* ------------------------------------------------------------- címkék --- */
+.k-pill{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:14px 26px;border-radius:999px;
+  background:rgba(11,12,14,.62);border:1.5px solid var(--line-strong);
+  backdrop-filter:blur(8px);
+  font-size:21px;font-weight:600;color:#EAEEF3;
+}
+.k-pill.accent{background:var(--accent);border-color:var(--accent);color:#0B0C0E;font-weight:700}
+.k-badge{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  width:150px;height:150px;border-radius:50%;
+  background:var(--accent);color:#0B0C0E;text-align:center;
+  box-shadow:0 20px 60px -20px rgba(216,255,62,.7);
+}
+.k-badge b{font-family:var(--display);font-size:46px;line-height:1}
+.k-badge span{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;line-height:1.25}
+
+/* ------------------------------------------------------------ csillag --- */
+.k-stars{color:var(--accent);font-size:30px;letter-spacing:.14em}
