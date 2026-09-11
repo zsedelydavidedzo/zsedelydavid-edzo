@@ -253,4 +253,43 @@
   var ev = document.getElementById('ev');
   if (ev) ev.textContent = new Date().getFullYear();
 
+  /* ------------------------------ 11. Facebook vélemények (lazy load) --- */
+  var fbFrame = document.getElementById('fb-revs-frame');
+  if (fbFrame && 'IntersectionObserver' in window) {
+    var fbIo = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        obs.disconnect();
+
+        var pageBox = document.createElement('div');
+        pageBox.className = 'fb-page';
+        pageBox.setAttribute('data-href', 'https://www.facebook.com/profile.php?id=61579859533449');
+        pageBox.setAttribute('data-tabs', 'reviews');
+        pageBox.setAttribute('data-width', '500');
+        pageBox.setAttribute('data-height', '700');
+        pageBox.setAttribute('data-small-header', 'false');
+        pageBox.setAttribute('data-adapt-container-width', 'true');
+        pageBox.setAttribute('data-hide-cover', 'false');
+        fbFrame.innerHTML = '';
+        fbFrame.appendChild(pageBox);
+
+        if (window.FB) {
+          window.FB.XFBML.parse(fbFrame);
+        } else {
+          var fbRoot = document.createElement('div');
+          fbRoot.id = 'fb-root';
+          document.body.appendChild(fbRoot);
+
+          var s = document.createElement('script');
+          s.async = true;
+          s.defer = true;
+          s.crossOrigin = 'anonymous';
+          s.src = 'https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0';
+          document.body.appendChild(s);
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+    fbIo.observe(fbFrame);
+  }
+
 })();
