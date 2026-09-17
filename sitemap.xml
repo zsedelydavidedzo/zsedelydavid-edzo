@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://zsedelydavid.hu/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -11,11 +11,11 @@
       <image:title>Zsédely Dávid személyi edző Győrben</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://zsedelydavid.hu/img/loc-gymtronic.jpg</image:loc>
+      <image:loc>https://zsedelydavid.hu/img/helyszin-gymtronic.jpg</image:loc>
       <image:title>Gymtronic terem, Győr</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://zsedelydavid.hu/img/loc-outdoor.jpg</image:loc>
+      <image:loc>https://zsedelydavid.hu/img/helyszin-outdoor-park.jpg</image:loc>
       <image:title>Kültéri edzőpark, Győr</image:title>
     </image:image>
   </url>
