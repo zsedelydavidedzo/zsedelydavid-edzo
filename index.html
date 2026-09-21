@@ -32,11 +32,9 @@
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link rel="preload" as="image" href="/img/hero-zsedely-david-960.webp" fetchpriority="high">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css?v=2">
+<link rel="stylesheet" href="/css/fonts.css?v=1">
+<link rel="stylesheet" href="/css/style.css?v=3">
 </head>
 
 <body>
@@ -397,7 +395,10 @@ Ismerj meg, és kezdjük el együtt.</p>
     <div class="fb-revs-block">
       <p class="fb-revs-label">Az összes vélemény, élőben a Facebookról — automatikusan frissül, ahogy új érkezik</p>
       <div class="fb-revs-frame" id="fb-revs-frame">
-        <div class="fb-revs-loading">Vélemények betöltése…</div>
+        <div class="fb-revs-consent">
+          <p>A Facebook-vélemények élő megjelenítésekor a Meta (Facebook) sütiket helyezhet el a böngésződben, ezért ezt csak az engedélyeddel töltjük be. A döntésedet a lábléc „Süti beállítások” linkjén bármikor módosíthatod.</p>
+          <button type="button" class="btn btn-ghost btn-sm" data-consent-external="">Facebook-vélemények betöltése</button>
+        </div>
       </div>
       <a class="btn btn-ghost btn-sm" href="https://www.facebook.com/profile.php?id=61579859533449&amp;sk=reviews" target="_blank" rel="noopener">Összes vélemény megnyitása Facebookon</a>
     </div>
@@ -526,7 +527,7 @@ Ismerj meg, és kezdjük el együtt.</p>
       </div>
       <nav class="f-col" aria-label="Oldalak"><span class="f-ttl">Oldalak</span><a href="#top">Kezdőlap</a><a href="#rolam">Rólam</a><a href="#szolgaltatasok">Szolgáltatások</a><a href="#galeria">Galéria</a></nav>
       <nav class="f-col" aria-label="Szolgáltatások"><span class="f-ttl">Szolgáltatás</span><a href="#szolgaltatasok">Személyi edzés</a><a href="#szolgaltatasok">Kültéri edzés</a><a href="#szolgaltatasok">Páros edzés</a><a href="#szolgaltatasok">Online terv</a></nav>
-      <nav class="f-col" aria-label="Jogi"><span class="f-ttl">Jogi</span><a href="/adatkezeles">Adatkezelési tájékoztató</a><a href="/aszf">ÁSZF</a><a href="#kapcsolat">Kapcsolat</a></nav>
+      <nav class="f-col" aria-label="Jogi"><span class="f-ttl">Jogi</span><a href="/adatkezeles">Adatkezelési tájékoztató</a><a href="/aszf">ÁSZF</a><button type="button" class="ck-open">Süti beállítások</button><a href="#kapcsolat">Kapcsolat</a></nav>
     </div>
     <div class="f-bot">
       <span>© <span id="ev">2026</span> Zsédely Dávid — Minden jog fenntartva.</span>
@@ -848,7 +849,7 @@ Ismerj meg, és kezdjük el együtt.</p>
  ]
 }
 </script>
-<script src="/js/main.js?v=2" defer=""></script>
+<script src="/js/main.js?v=3" defer=""></script>
 
 
 

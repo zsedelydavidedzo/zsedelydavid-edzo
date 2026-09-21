@@ -253,9 +253,114 @@
   var ev = document.getElementById('ev');
   if (ev) ev.textContent = new Date().getFullYear();
 
-  /* ------------------------------ 11. Facebook vélemények (lazy load) --- */
+  /* ------------------------------------------ 11. Süti-hozzájárulás --- */
+  // Csak a hozzájárulás-köteles tartalom (Facebook) vár engedélyre; a döntés
+  // megjegyzése feltétlenül szükséges tárolás. 180 nap után újra megkérdezzük.
+  var CK_KEY = 'zd_consent';
+  var CK_VERSION = 1;
+  var CK_MAX_AGE = 180 * 24 * 60 * 60 * 1000;
+
+  var consent = (function () {
+    try {
+      var c = JSON.parse(localStorage.getItem(CK_KEY));
+      if (c && c.v === CK_VERSION && Date.now() - new Date(c.date).getTime() < CK_MAX_AGE) return c;
+    } catch (e) {}
+    return null;
+  })();
+
+  var ck = null;
+
+  function setConsent(external) {
+    var hadExternal = !!(consent && consent.external);
+    consent = { v: CK_VERSION, date: new Date().toISOString(), external: !!external };
+    try { localStorage.setItem(CK_KEY, JSON.stringify(consent)); } catch (e) {}
+    hideBanner();
+    // a már betöltött Facebook-tartalmat csak újratöltéssel lehet eltávolítani
+    if (hadExternal && !consent.external && document.getElementById('fb-root')) {
+      window.location.reload();
+      return;
+    }
+    document.dispatchEvent(new CustomEvent('zd:consent'));
+  }
+
+  function hideBanner() {
+    if (ck) { ck.remove(); ck = null; }
+  }
+
+  function showBanner(openPrefs) {
+    if (ck) {
+      if (openPrefs) togglePrefs(true);
+      return;
+    }
+    ck = document.createElement('div');
+    ck.className = 'ck';
+    ck.setAttribute('role', 'dialog');
+    ck.setAttribute('aria-modal', 'false');
+    ck.setAttribute('aria-labelledby', 'ck-ttl');
+    ck.setAttribute('aria-describedby', 'ck-txt');
+    ck.innerHTML =
+      '<p class="ck-ttl" id="ck-ttl">Sütik és külső tartalom</p>' +
+      '<p class="ck-txt" id="ck-txt">Az oldal nem használ nyomkövető, statisztikai vagy hirdetési sütiket. ' +
+      'A Vélemények résznél élő Facebook-tartalmat jeleníthetünk meg, amely a Meta sütijeit használja — ' +
+      'ezt csak a hozzájárulásoddal töltjük be. <a href="/adatkezeles#sutik">Részletek</a></p>' +
+      '<div class="ck-prefs" id="ck-prefs" hidden>' +
+        '<div class="ck-row"><div><b>Feltétlenül szükséges</b>' +
+          '<span>A süti-döntésed megjegyzése a böngésződben (180 napig). Hozzájárulást nem igényel, nem kapcsolható ki.</span></div>' +
+          '<span class="ck-always">Mindig aktív</span></div>' +
+        '<label class="ck-row" for="ck-ext"><div><b>Külső tartalom — Facebook</b>' +
+          '<span>A Facebook-értékelések élő beágyazása. Bekapcsolás esetén a Meta Platforms Ireland Ltd. sütiket helyezhet el, ' +
+          'és megkapja többek között az IP-címedet és a böngésződ adatait — akkor is, ha nincs Facebook-fiókod.</span></div>' +
+          '<input type="checkbox" class="ck-switch" id="ck-ext"></label>' +
+      '</div>' +
+      '<div class="ck-btns">' +
+        '<button type="button" class="ck-btn" data-ck="reject">Elutasítom</button>' +
+        '<button type="button" class="ck-btn" data-ck="accept">Elfogadom</button>' +
+        '<button type="button" class="ck-btn" data-ck="save" hidden>Választás mentése</button>' +
+        '<button type="button" class="ck-link" data-ck="prefs" aria-expanded="false" aria-controls="ck-prefs">Beállítások</button>' +
+      '</div>';
+
+    ck.querySelector('#ck-ext').checked = !!(consent && consent.external);
+    ck.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ck]');
+      if (!b) return;
+      var a = b.getAttribute('data-ck');
+      if (a === 'accept') setConsent(true);
+      else if (a === 'reject') setConsent(false);
+      else if (a === 'save') setConsent(ck.querySelector('#ck-ext').checked);
+      else if (a === 'prefs') togglePrefs();
+    });
+
+    var skip = document.querySelector('.skip');
+    document.body.insertBefore(ck, skip ? skip.nextSibling : document.body.firstChild);
+    if (openPrefs) togglePrefs(true);
+  }
+
+  function togglePrefs(force) {
+    var prefs = ck.querySelector('#ck-prefs');
+    var open = typeof force === 'boolean' ? force : prefs.hidden;
+    prefs.hidden = !open;
+    ck.querySelector('[data-ck="save"]').hidden = !open;
+    var t = ck.querySelector('[data-ck="prefs"]');
+    t.setAttribute('aria-expanded', open ? 'true' : 'false');
+    t.textContent = open ? 'Beállítások bezárása' : 'Beállítások';
+  }
+
+  if (!consent) showBanner(false);
+
+  document.addEventListener('click', function (e) {
+    var o = e.target.closest('.ck-open');
+    if (!o) return;
+    e.preventDefault();
+    showBanner(true);
+    ck.querySelector('#ck-ext').focus();
+  });
+
+  /* ---------------------- 12. Facebook vélemények (csak hozzájárulással) --- */
   var fbFrame = document.getElementById('fb-revs-frame');
-  if (fbFrame && 'IntersectionObserver' in window) {
+  if (fbFrame) {
+    var fbInView = !('IntersectionObserver' in window);
+    var fbStarted = false;
+
     var fbFallback = function () {
       fbFrame.innerHTML =
         '<div class="fb-revs-fallback">' +
@@ -264,49 +369,61 @@
         '</div>';
     };
 
-    var fbIo = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
+    var startFb = function () {
+      if (fbStarted || !fbInView || !consent || !consent.external) return;
+      fbStarted = true;
+
+      var pageBox = document.createElement('div');
+      pageBox.className = 'fb-page';
+      pageBox.setAttribute('data-href', 'https://www.facebook.com/profile.php?id=61579859533449');
+      pageBox.setAttribute('data-tabs', 'reviews');
+      pageBox.setAttribute('data-width', '500');
+      pageBox.setAttribute('data-height', '700');
+      pageBox.setAttribute('data-small-header', 'false');
+      pageBox.setAttribute('data-adapt-container-width', 'true');
+      pageBox.setAttribute('data-hide-cover', 'false');
+      fbFrame.innerHTML = '';
+      fbFrame.appendChild(pageBox);
+
+      var fbCheck = window.setTimeout(function () {
+        if (!fbFrame.querySelector('iframe')) fbFallback();
+      }, 7000);
+
+      if (window.FB) {
+        window.clearTimeout(fbCheck);
+        window.FB.XFBML.parse(fbFrame);
+        return;
+      }
+      var fbRoot = document.createElement('div');
+      fbRoot.id = 'fb-root';
+      document.body.appendChild(fbRoot);
+
+      var s = document.createElement('script');
+      s.async = true;
+      s.defer = true;
+      s.crossOrigin = 'anonymous';
+      s.src = 'https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0';
+      s.onerror = function () {
+        window.clearTimeout(fbCheck);
+        fbFallback();
+      };
+      document.body.appendChild(s);
+    };
+
+    if (!fbInView) {
+      new IntersectionObserver(function (entries, obs) {
+        if (!entries.some(function (en) { return en.isIntersecting; })) return;
         obs.disconnect();
+        fbInView = true;
+        startFb();
+      }, { rootMargin: '200px 0px' }).observe(fbFrame);
+    }
 
-        var pageBox = document.createElement('div');
-        pageBox.className = 'fb-page';
-        pageBox.setAttribute('data-href', 'https://www.facebook.com/profile.php?id=61579859533449');
-        pageBox.setAttribute('data-tabs', 'reviews');
-        pageBox.setAttribute('data-width', '500');
-        pageBox.setAttribute('data-height', '700');
-        pageBox.setAttribute('data-small-header', 'false');
-        pageBox.setAttribute('data-adapt-container-width', 'true');
-        pageBox.setAttribute('data-hide-cover', 'false');
-        fbFrame.innerHTML = '';
-        fbFrame.appendChild(pageBox);
-
-        var fbCheck = window.setTimeout(function () {
-          if (!fbFrame.querySelector('iframe')) fbFallback();
-        }, 7000);
-
-        if (window.FB) {
-          window.clearTimeout(fbCheck);
-          window.FB.XFBML.parse(fbFrame);
-        } else {
-          var fbRoot = document.createElement('div');
-          fbRoot.id = 'fb-root';
-          document.body.appendChild(fbRoot);
-
-          var s = document.createElement('script');
-          s.async = true;
-          s.defer = true;
-          s.crossOrigin = 'anonymous';
-          s.src = 'https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v19.0';
-          s.onerror = function () {
-            window.clearTimeout(fbCheck);
-            fbFallback();
-          };
-          document.body.appendChild(s);
-        }
-      });
-    }, { rootMargin: '200px 0px' });
-    fbIo.observe(fbFrame);
+    fbFrame.addEventListener('click', function (e) {
+      if (e.target.closest('[data-consent-external]')) setConsent(true);
+    });
+    document.addEventListener('zd:consent', startFb);
+    startFb();
   }
 
 })();

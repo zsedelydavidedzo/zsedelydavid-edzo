@@ -17,10 +17,8 @@
 <meta name="theme-color" content="#0B0C0E">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css?v=2">
+<link rel="stylesheet" href="/css/fonts.css?v=1">
+<link rel="stylesheet" href="/css/style.css?v=3">
 </head>
 <body>
 <header class="hdr scrolled">
@@ -50,8 +48,8 @@
       <tr><th>Név</th><td data-edit="jogi.nev">Zsédely Dávid e.v. / ___</td></tr>
       <tr><th>Székhely</th><td data-edit="jogi.szekhely">___ Győr, ___ utca ___</td></tr>
       <tr><th>Nyilvántartási / adószám</th><td data-edit="jogi.adoszam">___</td></tr>
-      <tr><th>E-mail</th><td data-edit="jogi.email">info@zsedelydavid.hu</td></tr>
-      <tr><th>Telefon</th><td data-edit="jogi.telefon">+36 30 000 0000</td></tr>
+      <tr><th>E-mail</th><td data-edit="jogi.email">zsedelydavid.edzo@gmail.com</td></tr>
+      <tr><th>Telefon</th><td data-edit="jogi.telefon">+36 70 281 8799</td></tr>
       <tr><th>Weboldal</th><td>https://zsedelydavid.hu</td></tr>
     </table>
 
@@ -80,18 +78,49 @@
     <p>A weboldal működtetéséhez az alábbi szolgáltatókat veszem igénybe:</p>
     <ul>
       <li><strong>Netlify, Inc.</strong> (USA) — a weboldal tárhelye és az űrlapok fogadása. Adatkezelési tájékoztató: netlify.com/privacy</li>
-      <li><strong>Google LLC</strong> — betűtípusok kiszolgálása (Google Fonts). Adatkezelési tájékoztató: policies.google.com/privacy</li>
-      <li data-edit="jogi.adatfeldolgozo-domain"><strong>___ (domain szolgáltató)</strong> — a domain név nyilvántartása</li>
+      <li data-edit="jogi.adatfeldolgozo-domain"><strong>domdom.hu (domain szolgáltató)</strong> — a domain név nyilvántartása</li>
     </ul>
     <p>Az USA-ba történő adattovábbítás az EU–USA adatvédelmi keretrendszer, illetve az Európai Bizottság
     általános szerződési feltételei alapján történik.</p>
+    <p>A weboldal betűtípusait saját tárhelyről szolgálom ki, ezért az oldal megnyitásakor nem jut adat
+    a Google-hoz vagy más betűtípus-szolgáltatóhoz.</p>
 
-    <h2>4. Sütik (cookie-k)</h2>
-    <p>A weboldal <strong>nem használ nyomkövető vagy marketing sütiket</strong>, és nem futtat analitikai szolgáltatást.
-    Kizárólag a működéshez feltétlenül szükséges technikai adatokat kezeli a tárhelyszolgáltató (pl. szervernaplók,
-    IP-cím a biztonság érdekében).</p>
-    <p data-edit="jogi.cookie-megjegyzes"><em>Ha később Google Analytics, Meta Pixel vagy hasonló eszközt teszel az oldalra,
-    ezt a szakaszt frissíteni kell, és sütibanner is szükséges lesz.</em></p>
+    <h2 id="sutik">4. Sütik (cookie-k) és hasonló technológiák</h2>
+    <p>A süti (cookie) és a böngésző helyi tárhelye (localStorage) olyan kis adatcsomag, amelyet egy weboldal
+    a böngésződben tárol. A weboldal <strong>nem használ nyomkövető, statisztikai (analitikai) vagy hirdetési sütiket</strong>.</p>
+    <p>Az első látogatáskor az oldal alján megjelenő ablakban dönthetsz a hozzájárulást igénylő tartalomról.
+    Hozzájárulás nélkül is minden funkció elérhető. A döntésedet bármikor módosíthatod vagy visszavonhatod
+    minden oldal láblécében a <button type="button" class="ck-open">Süti beállítások</button> linkre kattintva.
+    A visszavonás nem érinti a korábbi adatkezelés jogszerűségét.</p>
+
+    <h3>4.1 Feltétlenül szükséges tárolás</h3>
+    <p>Ezek nélkül az oldal nem tudná megjegyezni a döntésedet, ezért hozzájárulást nem igényelnek
+    (az elektronikus hírközlésről szóló 2003. évi C. törvény 155. § (4) bekezdése).</p>
+    <table>
+      <tr><th>Név</th><th>Típus</th><th>Cél</th><th>Időtartam</th></tr>
+      <tr><td>zd_consent</td><td>Helyi tárhely (localStorage)</td><td>A süti-döntésed és időpontjának megjegyzése, a hozzájárulás igazolása (GDPR 7. cikk (1) bekezdés)</td><td>180 nap, utána újra megkérdezzük</td></tr>
+      <tr><td>nl-hud:public:v1</td><td>Helyi tárhely (localStorage), Netlify</td><td>Csak akkor jön létre, ha a jobb alsó sarokban megjelenő „Powered by Netlify” jelvényt elrejted: ezt jegyzi meg</td><td>A böngésző adatainak törléséig</td></tr>
+    </table>
+    <p>A tárhelyszolgáltató a biztonságos működés érdekében technikai adatokat (pl. IP-cím, a kérés időpontja)
+    naplóz. Ez nem süti, és nem szolgál a látogatók követésére.</p>
+
+    <h3>4.2 Külső tartalom: Facebook (csak hozzájárulással)</h3>
+    <p>A főoldal Vélemények részében a Facebook-oldalam értékeléseit élőben is megjeleníthetem a Facebook
+    beépülő moduljával. Ez <strong>csak akkor töltődik be, ha ehhez hozzájárulsz</strong>: az ablak „Elfogadom”
+    gombjával, a beállításokban, vagy a Vélemények résznél a „Facebook-vélemények betöltése” gombbal.</p>
+    <table>
+      <tr><th>Szolgáltató</th><td>Meta Platforms Ireland Ltd., 4 Grand Canal Square, Grand Canal Harbour, Dublin 2, Írország</td></tr>
+      <tr><th>Kezelt adatok</th><td>IP-cím, böngésző- és eszközadatok, a meglátogatott oldal címe, a Meta sütijeiben tárolt azonosítók. Ha be vagy jelentkezve a Facebookra, a Meta a látogatást a fiókodhoz is kapcsolhatja; fiók nélkül is gyűjthet adatot.</td></tr>
+      <tr><th>Cél</th><td>A Facebook-értékelések élő megjelenítése</td></tr>
+      <tr><th>Jogalap</th><td>Hozzájárulás (GDPR 6. cikk (1) a) pont; Eht. 155. § (4) bekezdés)</td></tr>
+      <tr><th>Sütik</th><td>A Meta saját sütijei; ezek listáját és élettartamát a Meta süti-szabályzata tartalmazza</td></tr>
+      <tr><th>Adattovábbítás</th><td>A Meta az adatokat az USA-ba is továbbíthatja, az EU–USA adatvédelmi keretrendszer alapján</td></tr>
+    </table>
+    <p>Az adatok gyűjtéséért és a Meta részére történő továbbításáért a Metával közösen vagyok felelős
+    (az Európai Unió Bíróságának C-40/17. számú ítélete alapján); az ezt követő adatkezelésért a Meta önállóan felel.
+    A Meta adatkezeléséről: <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener">facebook.com/privacy/policy</a>.</p>
+    <p>A lábléc Instagram- és Facebook-ikonjai egyszerű linkek: csak kattintásra nyitják meg az adott oldalt,
+    addig semmilyen adatot nem küldenek.</p>
 
     <h2>5. Milyen jogaid vannak?</h2>
     <ul>
@@ -103,7 +132,7 @@
       <li><strong>Tiltakozáshoz való jog</strong> — tiltakozhatsz az adatkezelés ellen.</li>
       <li><strong>Hozzájárulás visszavonása</strong> — a hozzájárulásodat bármikor visszavonhatod, ez nem érinti a korábbi adatkezelés jogszerűségét.</li>
     </ul>
-    <p>Kérésedet a <a href="mailto:info@zsedelydavid.hu">info@zsedelydavid.hu</a> címre küldheted.
+    <p>Kérésedet a <a href="mailto:zsedelydavid.edzo@gmail.com">zsedelydavid.edzo@gmail.com</a> címre küldheted.
     A megkeresésre legkésőbb <strong>30 napon belül</strong> válaszolok.</p>
 
     <h2>6. Jogorvoslat</h2>
@@ -130,10 +159,10 @@
   <div class="wrap">
     <div class="f-bot">
       <span>© <span id="ev">2026</span> Zsédely Dávid — Minden jog fenntartva.</span>
-      <span><a href="/adatkezeles" style="color:inherit;text-decoration:none">Adatkezelés</a> · <a href="/aszf" style="color:inherit;text-decoration:none">ÁSZF</a> · zsedelydavid.hu</span>
+      <span><a href="/adatkezeles" style="color:inherit;text-decoration:none">Adatkezelés</a> · <a href="/aszf" style="color:inherit;text-decoration:none">ÁSZF</a> · <button type="button" class="ck-open">Süti beállítások</button> · zsedelydavid.hu</span>
     </div>
   </div>
 </footer>
-<script src="/js/main.js?v=2" defer></script>
+<script src="/js/main.js?v=3" defer></script>
 </body>
 </html>
