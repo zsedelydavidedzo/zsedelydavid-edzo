@@ -112,6 +112,12 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/impresszum.html"
+  to = "/impresszum"
+  status = 301
+  force = true
+
 # ---------- Nem-produkciós környezetek kizárása a keresőkből ----------
 [context.deploy-preview]
   [[context.deploy-preview.headers]]
