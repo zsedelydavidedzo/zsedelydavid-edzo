@@ -584,3 +584,8 @@ label.ck-row{cursor:pointer}
 .thanks p{max-width:520px;margin:0 auto 32px;font-size:17px}
 .thanks .row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .page .ck-open{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.page .toc ul{columns:2;column-gap:36px;margin-bottom:0}
+.page .toc li{break-inside:avoid}
+.page .toc a{text-decoration:none}
+.page .toc a:hover{text-decoration:underline}
+@media (max-width:560px){.page .toc ul{columns:1}}
