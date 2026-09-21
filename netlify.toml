@@ -118,6 +118,36 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/szemelyi-edzes-gymtronic-gyor.html"
+  to = "/szemelyi-edzes-gymtronic-gyor"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/kulteri-szemelyi-edzes-gyor.html"
+  to = "/kulteri-szemelyi-edzes-gyor"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/paros-edzes-gyor.html"
+  to = "/paros-edzes-gyor"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/elso-alkalom.html"
+  to = "/elso-alkalom"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/szemelyi-edzes-arak-gyor.html"
+  to = "/szemelyi-edzes-arak-gyor"
+  status = 301
+  force = true
+
 # ---------- Nem-produkciós környezetek kizárása a keresőkből ----------
 [context.deploy-preview]
   [[context.deploy-preview.headers]]

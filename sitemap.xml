@@ -20,6 +20,56 @@
     </image:image>
   </url>
   <url>
+    <loc>https://zsedelydavid.hu/szemelyi-edzes-gymtronic-gyor</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://zsedelydavid.hu/img/szolg-szemelyi-edzes.jpg</image:loc>
+      <image:title>Személyi edzés a győri Gymtronic teremben</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://zsedelydavid.hu/kulteri-szemelyi-edzes-gyor</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://zsedelydavid.hu/img/szolg-outdoor.jpg</image:loc>
+      <image:title>Kültéri street workout edzés Győrben</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://zsedelydavid.hu/paros-edzes-gyor</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://zsedelydavid.hu/img/szolg-paros-edzes.jpg</image:loc>
+      <image:title>Páros személyi edzés Győrben</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://zsedelydavid.hu/elso-alkalom</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://zsedelydavid.hu/img/rolam-zsedely-david.jpg</image:loc>
+      <image:title>Zsédely Dávid személyi edző</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://zsedelydavid.hu/szemelyi-edzes-arak-gyor</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://zsedelydavid.hu/img/galeria-01-kettlebell.jpg</image:loc>
+      <image:title>Kettlebellek a győri teremben</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://zsedelydavid.hu/adatkezeles</loc>
     <lastmod>2026-09-21</lastmod>
     <changefreq>yearly</changefreq>

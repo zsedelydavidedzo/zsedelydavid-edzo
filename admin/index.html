@@ -7,8 +7,8 @@
 <title>Admin — Zsédely Dávid</title>
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/fonts.css?v=1">
-<link rel="stylesheet" href="/css/style.css?v=3">
-<link rel="stylesheet" href="/admin/admin.css?v=2">
+<link rel="stylesheet" href="/css/style.css?v=4">
+<link rel="stylesheet" href="/admin/admin.css?v=3">
 </head>
 <body class="adm">
 
@@ -37,7 +37,18 @@
       </div>
     </div>
     <div class="abar-r">
-      <a class="btn btn-ghost btn-sm" href="/" target="_blank" rel="noopener">Oldal megnyitása ↗</a>
+      <select id="page" class="pagesel" aria-label="Szerkesztett oldal">
+        <option value="index.html">Főoldal</option>
+        <option value="szemelyi-edzes-gymtronic-gyor.html">Személyi edzés – Gymtronic</option>
+        <option value="kulteri-szemelyi-edzes-gyor.html">Kültéri edzés</option>
+        <option value="paros-edzes-gyor.html">Páros edzés</option>
+        <option value="elso-alkalom.html">Első alkalom</option>
+        <option value="szemelyi-edzes-arak-gyor.html">Árak</option>
+        <option value="aszf.html">ÁSZF</option>
+        <option value="adatkezeles.html">Adatkezelési tájékoztató</option>
+        <option value="impresszum.html">Impresszum</option>
+      </select>
+      <a class="btn btn-ghost btn-sm" id="openPage" href="/" target="_blank" rel="noopener">Oldal megnyitása ↗</a>
       <button class="btn btn-ghost btn-sm" id="reload" type="button">Elvetés</button>
       <button class="btn btn-primary btn-sm" id="save" type="button" disabled>Mentés és közzététel</button>
     </div>
@@ -52,6 +63,6 @@
   </div>
 </div>
 
-<script src="/admin/admin.js?v=2"></script>
+<script src="/admin/admin.js?v=3"></script>
 </body>
 </html>

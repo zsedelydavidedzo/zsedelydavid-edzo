@@ -9,7 +9,8 @@
   var API = '/api/save';
 
   var pw = '';
-  var doc = null;          // a beolvasott index.html DOM-ja
+  var page = 'index.html'; // a szerkesztett oldal fájlneve
+  var doc = null;          // a beolvasott oldal DOM-ja
   var fields = [];         // { el, orig, ta }
   var images = [];         // { picture, img, orig, newFiles }
   var dirty = false;
@@ -43,13 +44,15 @@
     'about': 'Rólam', 'services': 'Szolgáltatások', 'locations': 'Helyszínek',
     'process': 'Folyamat', 'gallery': 'Galéria', 'pricing': 'Árak / csomagok',
     'reviews': 'Vélemények', 'faq': 'GYIK', 'cta': 'CTA sáv',
-    'contact': 'Kapcsolat', 'footer': 'Lábléc'
+    'contact': 'Kapcsolat', 'footer': 'Lábléc',
+    'sub-hero': 'Nyitóblokk', 'page': 'Jogi szöveg'
   };
   function sectionName(el) {
     var s = el.closest('section, header, footer');
     if (!s) return 'Egyéb';
     for (var cls in SECTION_NAMES) if (s.classList.contains(cls)) return SECTION_NAMES[cls];
-    return 'Egyéb';
+    var h = s.querySelector('h2');
+    return h ? shorten(h.textContent, 40) : 'Egyéb';
   }
 
   /* Szerkeszthető-e? Csak az inline tartalmú elemek. */
@@ -67,7 +70,7 @@
     return fetch(API, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ action: 'load', path: 'index.html', password: pw })
+      body: JSON.stringify({ action: 'load', path: page, password: pw })
     })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); })
       .then(function (res) {
@@ -89,7 +92,7 @@
     fields = []; images = [];
     editor.innerHTML = ''; aside.innerHTML = '';
 
-    var SEL = 'h1,h2,h3,h4,p,li,summary,a,b,em,small,span[data-edit],.tagi,.pin,.eyebrow,.price,'
+    var SEL = 'h1,h2,h3,h4,p,li,summary,td,a,b,em,small,span[data-edit],.tagi,.pin,.eyebrow,.price,'
             + '.stat b,.stat span,.hero-badge b,.hero-badge span,.card-meta span,.card-meta em,.feats li';
     var nodes = Array.prototype.slice.call(doc.querySelectorAll(SEL));
 
@@ -162,7 +165,11 @@
 
     var tag = el.tagName.toLowerCase();
     var hasIcon = !!el.querySelector('svg');
-    var label = ({ h1: 'Főcím', h2: 'Szekciócím', h3: 'Alcím', summary: 'Kérdés', li: 'Listaelem', p: 'Szöveg' })[tag] || 'Szöveg';
+    var label = ({ h1: 'Főcím', h2: 'Szekciócím', h3: 'Alcím', summary: 'Kérdés', li: 'Listaelem', p: 'Szöveg', td: 'Táblázat' })[tag] || 'Szöveg';
+    if (tag === 'td') {
+      var th = el.parentNode.querySelector('th');
+      if (th) label = th.textContent.trim();
+    }
     if (el.classList.contains('eyebrow')) label = 'Kis címke';
     if (el.classList.contains('btn')) label = 'Gomb felirata';
     if (el.classList.contains('tagi') || el.classList.contains('pin')) label = 'Jelölő címke';
@@ -375,7 +382,7 @@
        .forEach(function (s) { s.remove(); });
 
     var html = '<!doctype html>\n' + doc.documentElement.outerHTML + '\n';
-    files.push({ path: 'index.html', content: html, encoding: 'utf-8' });
+    files.push({ path: page, content: html, encoding: 'utf-8' });
     return files;
   }
 
@@ -390,7 +397,7 @@
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         password: pw,
-        message: 'Tartalom frissítése (' + new Date().toLocaleString('hu-HU') + ')',
+        message: 'Tartalom frissítése: ' + pageLabel() + ' (' + new Date().toLocaleString('hu-HU') + ')',
         files: files
       })
     })
@@ -444,6 +451,19 @@
         : 'Nem sikerült betölteni: ' + e.message;
       err.hidden = false;
     });
+  });
+
+  var pageSel = $('#page'), openPage = $('#openPage');
+  function pageLabel() { return pageSel.options[pageSel.selectedIndex].text; }
+  pageSel.addEventListener('change', function () {
+    if (dirty && !confirm('Nem mentett módosításaid vannak ezen az oldalon. Biztosan másik oldalra váltasz?')) {
+      pageSel.value = page;
+      return;
+    }
+    page = pageSel.value;
+    openPage.href = page === 'index.html' ? '/' : '/' + page.replace(/\.html$/, '');
+    noticeEl.hidden = true;
+    load().catch(function (e) { notice('<strong>Nem sikerült betölteni.</strong> ' + e.message, 'err'); });
   });
 
   saveBtn.addEventListener('click', save);

@@ -92,3 +92,7 @@ body.adm{background:var(--bg);min-height:100vh}
   padding:11px 13px;font:400 13.5px var(--mono, ui-monospace, monospace);color:var(--accent)}
 .hrefrow input:focus{outline:none;border-color:var(--accent)}
 .hrefrow .hint{margin-top:8px}
+.pagesel{height:40px;max-width:230px;padding:0 34px 0 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.18);
+  background:#16181D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23D8FF3E' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 14px center;
+  color:#fff;font:600 13.5px/1 var(--body);-webkit-appearance:none;appearance:none;cursor:pointer}
+.pagesel:focus-visible{outline:2px solid #D8FF3E;outline-offset:2px}

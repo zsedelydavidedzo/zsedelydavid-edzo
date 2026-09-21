@@ -77,7 +77,7 @@ export default async (req) => {
   // ---- betöltés: a repóban lévő NYERS forrás (nem az élő, feldolgozott oldal) ----
   if (body.action === 'load') {
     const path = typeof body.path === 'string' ? body.path : 'index.html';
-    if (!/^(index|adatkezeles|aszf|koszonjuk|404)\.html$/.test(path)) {
+    if (!/^(index|szemelyi-edzes-gymtronic-gyor|kulteri-szemelyi-edzes-gyor|paros-edzes-gyor|elso-alkalom|szemelyi-edzes-arak-gyor|adatkezeles|aszf|impresszum|koszonjuk|404)\.html$/.test(path)) {
       return json({ error: `Nem engedélyezett útvonal: ${path}` }, 400);
     }
     try {
@@ -93,7 +93,7 @@ export default async (req) => {
   if (!files.length) return json({ error: 'Nincs menteni való fájl.' }, 400);
 
   // Csak a megengedett útvonalakra írhat
-  const ALLOWED = /^(index\.html|adatkezeles\.html|aszf\.html|koszonjuk\.html|404\.html|img\/[A-Za-z0-9._-]+)$/;
+  const ALLOWED = /^((index|szemelyi-edzes-gymtronic-gyor|kulteri-szemelyi-edzes-gyor|paros-edzes-gyor|elso-alkalom|szemelyi-edzes-arak-gyor|adatkezeles|aszf|impresszum|koszonjuk|404)\.html|img\/[A-Za-z0-9._-]+)$/;
   for (const f of files) {
     if (typeof f.path !== 'string' || !ALLOWED.test(f.path)) {
       return json({ error: `Nem engedélyezett útvonal: ${f.path}` }, 400);
