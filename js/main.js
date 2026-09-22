@@ -369,21 +369,33 @@
         '</div>';
     };
 
-    var startFb = function () {
-      if (fbStarted || !fbInView || !consent || !consent.external) return;
-      fbStarted = true;
-
+    // A Facebook a megadott szélességben rajzol, és később nem igazodik:
+    // a keret tényleges belső szélességét adjuk át (a plugin 180–500 px-et fogad el).
+    var fbWidth = function () {
+      var cs = window.getComputedStyle(fbFrame);
+      var w = fbFrame.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      return Math.max(180, Math.min(500, Math.floor(w)));
+    };
+    var fbW = 0;
+    var renderFb = function () {
+      fbW = fbWidth();
       var pageBox = document.createElement('div');
       pageBox.className = 'fb-page';
       pageBox.setAttribute('data-href', 'https://www.facebook.com/profile.php?id=61579859533449');
       pageBox.setAttribute('data-tabs', 'reviews');
-      pageBox.setAttribute('data-width', '500');
+      pageBox.setAttribute('data-width', String(fbW));
       pageBox.setAttribute('data-height', '700');
       pageBox.setAttribute('data-small-header', 'false');
       pageBox.setAttribute('data-adapt-container-width', 'true');
       pageBox.setAttribute('data-hide-cover', 'false');
       fbFrame.innerHTML = '';
       fbFrame.appendChild(pageBox);
+    };
+
+    var startFb = function () {
+      if (fbStarted || !fbInView || !consent || !consent.external) return;
+      fbStarted = true;
+      renderFb();
 
       var fbCheck = window.setTimeout(function () {
         if (!fbFrame.querySelector('iframe')) fbFallback();
@@ -422,6 +434,17 @@
     fbFrame.addEventListener('click', function (e) {
       if (e.target.closest('[data-consent-external]')) setConsent(true);
     });
+    var fbResize;
+    window.addEventListener('resize', function () {
+      if (!fbStarted || !window.FB) return;
+      window.clearTimeout(fbResize);
+      fbResize = window.setTimeout(function () {
+        if (!fbFrame.querySelector('.fb-page') || Math.abs(fbWidth() - fbW) < 40) return;
+        renderFb();
+        window.FB.XFBML.parse(fbFrame);
+      }, 300);
+    });
+
     document.addEventListener('zd:consent', startFb);
     startFb();
   }

@@ -312,7 +312,9 @@ p{color:var(--muted);font-size:clamp(15.5px,1.15vw,17px)}
 .fb-revs-frame{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   padding:20px;max-width:560px;margin:0 auto 22px;min-height:130px;
   display:flex;align-items:center;justify-content:center;overflow:hidden}
-.fb-revs-frame iframe{max-width:100%}
+.fb-revs-frame .fb-page{width:100%;max-width:500px}
+.fb-revs-frame .fb-page > span,.fb-revs-frame iframe{max-width:100%}
+.fb-revs-block .btn{max-width:100%;white-space:normal;height:auto;min-height:46px;padding-block:12px;line-height:1.3}
 .fb-revs-consent{padding:18px 6px;text-align:center}
 .fb-revs-consent p{font-size:13.5px;line-height:1.6;color:var(--muted);max-width:430px;margin:0 auto 16px}
 .fb-revs-fallback{padding:24px 8px;text-align:center}
@@ -662,6 +664,7 @@ label.ck-row{cursor:pointer}
   .steps.three{grid-template-columns:1fr}
 }
 @media (max-width:560px){
+  .fb-revs-frame{padding:12px}
   .related{grid-template-columns:1fr}
   .info-box{padding:22px 20px}
   .tbl th,.tbl td{padding:10px 10px;font-size:14px}
