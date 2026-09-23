@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Adatkezelési tájékoztató | Zsédely Dávid személyi edző</title>
-<meta name="description" content="Hogyan kezelem a kapcsolatfelvételi űrlapon és az edzések során megadott személyes adataidat. Adatkezelési tájékoztató a zsedelydavid.hu oldalhoz.">
+<meta name="description" content="Hogyan kezelem a kapcsolatfelvételi űrlapon, az online időpontfoglaláskor és az edzések során megadott személyes adataidat. Adatkezelési tájékoztató a zsedelydavid.hu oldalhoz.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://zsedelydavid.hu/adatkezeles">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="hu_HU">
 <meta property="og:site_name" content="Zsédely Dávid – személyi edző">
 <meta property="og:title" content="Adatkezelési tájékoztató | Zsédely Dávid személyi edző">
-<meta property="og:description" content="Hogyan kezelem a kapcsolatfelvételi űrlapon és az edzések során megadott személyes adataidat. Adatkezelési tájékoztató a zsedelydavid.hu oldalhoz.">
+<meta property="og:description" content="Hogyan kezelem a kapcsolatfelvételi űrlapon, az online időpontfoglaláskor és az edzések során megadott személyes adataidat. Adatkezelési tájékoztató a zsedelydavid.hu oldalhoz.">
 <meta property="og:url" content="https://zsedelydavid.hu/adatkezeles">
 <meta property="og:image" content="https://zsedelydavid.hu/img/og-image.jpg">
 <meta name="theme-color" content="#0B0C0E">
@@ -20,7 +20,7 @@
 <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=2">
 <link rel="stylesheet" href="/css/fonts.css?v=1">
-<link rel="stylesheet" href="/css/style.css?v=5">
+<link rel="stylesheet" href="/css/style.css?v=6">
 </head>
 <body>
 <header class="hdr scrolled">
@@ -66,7 +66,22 @@
     </table>
     <p>Az űrlap kitöltése önkéntes. Az adatok megadása nélkül nem tudok visszajelezni a megkeresésedre.</p>
 
-    <h3>2.2 Szerződéses ügyfelek adatai</h3>
+    <h3 id="foglalas">2.2 Online időpontfoglalás</h3>
+    <p>Az <a href="/foglalas">Időpontfoglalás</a> oldalon a Google Naptár időpontfoglaló szolgáltatásával foglalhatsz edzést.
+    A foglaláskor megadott adatok a Google rendszerében, a naptáramban tárolódnak.</p>
+    <table>
+      <tr><th>Kezelt adat</th><th>Cél</th><th>Jogalap</th><th>Megőrzés</th></tr>
+      <tr><td>Név</td><td>Azonosítás, a foglalás kezelése</td><td>Szerződés megkötését megelőző lépés, szerződés teljesítése (GDPR 6. cikk (1) b))</td><td>Az edzés időpontját követő legfeljebb 1 év</td></tr>
+      <tr><td>E-mail cím</td><td>Visszaigazolás, a foglalás lemondása</td><td>Szerződés (GDPR 6. cikk (1) b))</td><td>Az edzés időpontját követő legfeljebb 1 év</td></tr>
+      <tr><td>Telefonszám</td><td>Kapcsolattartás az időponttal kapcsolatban (pl. késés, áthelyezés)</td><td>Szerződés (GDPR 6. cikk (1) b))</td><td>Az edzés időpontját követő legfeljebb 1 év</td></tr>
+      <tr><td>A foglalt időpont, megjegyzés</td><td>Az edzés megszervezése és előkészítése</td><td>Szerződés (GDPR 6. cikk (1) b))</td><td>Az edzés időpontját követő legfeljebb 1 év</td></tr>
+    </table>
+    <p>A foglalásról a Google visszaigazoló e-mailt küld a megadott címre; ebben a foglalást le is mondhatod. Ha foglaláskor
+    be vagy jelentkezve a Google-fiókodba, a Google a foglalást a fiókodhoz is kapcsolhatja. Kérlek, a megjegyzésbe ne írj
+    egészségügyi adatot: az edzéshez szükséges információkat az első alkalmon személyesen beszéljük át. A naptár weboldalba
+    ágyazott megjelenítéséről a <a href="#google-naptar">4.3 pont</a> szól.</p>
+
+    <h3>2.3 Szerződéses ügyfelek adatai</h3>
     <p>Ha edzésre szerződünk, a szolgáltatás teljesítéséhez és a számlázáshoz további adatokat kezelek
     (számlázási név és cím, a szolgáltatáshoz szükséges egészségügyi információk).
     Ezek jogalapja a szerződés teljesítése (GDPR 6. cikk (1) b)), illetve a számviteli
@@ -80,6 +95,7 @@
     <p>A weboldal működtetéséhez az alábbi szolgáltatókat veszem igénybe:</p>
     <ul>
       <li><strong>Netlify, Inc.</strong> (USA) — a weboldal tárhelye és az űrlapok fogadása. Adatkezelési tájékoztató: netlify.com/privacy</li>
+      <li><strong>Google Ireland Limited</strong> (Gordon House, Barrow Street, Dublin 4, Írország) — az online időpontfoglaló és a naptár (Google Naptár) működtetése. Adatkezelési tájékoztató: policies.google.com/privacy</li>
       <li data-edit="jogi.adatfeldolgozo-domain"><strong>domdom.hu (domain szolgáltató)</strong> — a domain név nyilvántartása</li>
     </ul>
     <p>Az USA-ba történő adattovábbítás az EU–USA adatvédelmi keretrendszer, illetve az Európai Bizottság
@@ -90,7 +106,7 @@
     <h2 id="sutik">4. Sütik (cookie-k) és hasonló technológiák</h2>
     <p>A süti (cookie) és a böngésző helyi tárhelye (localStorage) olyan kis adatcsomag, amelyet egy weboldal
     a böngésződben tárol. A weboldal <strong>nem használ nyomkövető, statisztikai (analitikai) vagy hirdetési sütiket</strong>.</p>
-    <p>Az első látogatáskor az oldal alján megjelenő ablakban dönthetsz a hozzájárulást igénylő tartalomról.
+    <p>Az első látogatáskor az oldal alján megjelenő ablakban dönthetsz a hozzájárulást igénylő tartalmakról.
     Hozzájárulás nélkül is minden funkció elérhető. A döntésedet bármikor módosíthatod vagy visszavonhatod
     minden oldal láblécében a <button type="button" class="ck-open">Süti beállítások</button> linkre kattintva.
     A visszavonás nem érinti a korábbi adatkezelés jogszerűségét.</p>
@@ -100,7 +116,7 @@
     (az elektronikus hírközlésről szóló 2003. évi C. törvény 155. § (4) bekezdése).</p>
     <table>
       <tr><th>Név</th><th>Típus</th><th>Cél</th><th>Időtartam</th></tr>
-      <tr><td>zd_consent</td><td>Helyi tárhely (localStorage)</td><td>A süti-döntésed és időpontjának megjegyzése, a hozzájárulás igazolása (GDPR 7. cikk (1) bekezdés)</td><td>180 nap, utána újra megkérdezzük</td></tr>
+      <tr><td>zd_consent</td><td>Helyi tárhely (localStorage)</td><td>A süti-döntéseid (Facebook, Google Naptár) és időpontjuk megjegyzése, a hozzájárulás igazolása (GDPR 7. cikk (1) bekezdés)</td><td>180 nap, utána újra megkérdezzük</td></tr>
       <tr><td>nl-hud:public:v1</td><td>Helyi tárhely (localStorage), Netlify</td><td>Csak akkor jön létre, ha a jobb alsó sarokban megjelenő „Powered by Netlify” jelvényt elrejted: ezt jegyzi meg</td><td>A böngésző adatainak törléséig</td></tr>
     </table>
     <p>A tárhelyszolgáltató a biztonságos működés érdekében technikai adatokat (pl. IP-cím, a kérés időpontja)
@@ -123,6 +139,22 @@
     A Meta adatkezeléséről: <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener">facebook.com/privacy/policy</a>.</p>
     <p>A lábléc Instagram- és Facebook-ikonjai, valamint az „Útvonalterv” hivatkozások (Google Térkép) egyszerű linkek: csak kattintásra nyitják meg az adott oldalt,
     addig semmilyen adatot nem küldenek.</p>
+
+    <h3 id="google-naptar">4.3 Külső tartalom: Google Naptár időpontfoglaló (csak hozzájárulással)</h3>
+    <p>Az Időpontfoglalás oldalon a szabad időpontokat a Google Naptár beágyazott foglalóoldala mutatja. Ez <strong>csak akkor
+    töltődik be, ha ehhez hozzájárulsz</strong>: az ablak „Elfogadom” gombjával, a beállításokban, vagy az Időpontfoglalás oldalon
+    a „Naptár betöltése” gombbal.</p>
+    <table>
+      <tr><th>Szolgáltató</th><td>Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Írország</td></tr>
+      <tr><th>Kezelt adatok</th><td>IP-cím, böngésző- és eszközadatok, a meglátogatott oldal címe, a Google sütijeiben tárolt azonosítók. Ha be vagy jelentkezve a Google-fiókodba, a Google a látogatást a fiókodhoz is kapcsolhatja; fiók nélkül is gyűjthet adatot.</td></tr>
+      <tr><th>Cél</th><td>A szabad időpontok megjelenítése és a foglalás lehetővé tétele a weboldalon</td></tr>
+      <tr><th>Jogalap</th><td>Hozzájárulás (GDPR 6. cikk (1) a) pont; Eht. 155. § (4) bekezdés)</td></tr>
+      <tr><th>Sütik</th><td>A Google saját sütijei; ezek listáját és élettartamát a Google tájékoztatója tartalmazza (policies.google.com/technologies/cookies)</td></tr>
+      <tr><th>Adattovábbítás</th><td>A Google az adatokat az USA-ba is továbbíthatja, az EU–USA adatvédelmi keretrendszer alapján</td></tr>
+    </table>
+    <p>Hozzájárulás nélkül is foglalhatsz: a „Megnyitás a Google Naptárban” hivatkozás új lapon, közvetlenül a Google oldalán
+    nyitja meg a foglalót – ott a Google saját adatkezelési szabályai érvényesek –, vagy telefonon, üzenetben is egyeztethetünk
+    időpontot. A Google adatkezeléséről: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
 
     <h2>5. Milyen jogaid vannak?</h2>
     <ul>
@@ -165,6 +197,6 @@
     </div>
   </div>
 </footer>
-<script src="/js/main.js?v=4" defer></script>
+<script src="/js/main.js?v=5" defer></script>
 </body>
 </html>

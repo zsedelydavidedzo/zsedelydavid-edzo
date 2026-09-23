@@ -45,7 +45,7 @@
     'process': 'Folyamat', 'gallery': 'Galéria', 'pricing': 'Árak / csomagok',
     'reviews': 'Vélemények', 'faq': 'GYIK', 'cta': 'CTA sáv',
     'contact': 'Kapcsolat', 'footer': 'Lábléc',
-    'sub-hero': 'Nyitóblokk', 'page': 'Jogi szöveg'
+    'sub-hero': 'Nyitóblokk', 'page': 'Jogi szöveg', 'bk': 'Időpontfoglalás'
   };
   function sectionName(el) {
     var s = el.closest('section, header, footer');
@@ -184,6 +184,7 @@
     if (el.closest('.quick')) label = 'Közösségi link';
     if (el.closest('.ans')) label = 'Válasz';
     if (el.closest('.feats')) label = 'Címke';
+    if (el.id === 'bk-link') label = 'Foglalási link (Google Naptár)';
 
     var orig = el.innerHTML;
     var ta = null;
@@ -223,9 +224,14 @@
       var hw = document.createElement('div');
       hw.className = 'hrefrow';
       hw.innerHTML = '<label>Hova vezet</label><input type="text" spellcheck="false">'
-        + '<p class="hint">Teljes cím: <code>https://instagram.com/felhasznalonev</code> · '
-        + '<code>https://m.me/oldalneve</code> · <code>tel:+36701234567</code> · '
-        + '<code>mailto:cim@example.com</code></p>';
+        + (linkEl.id === 'bk-link'
+          ? '<p class="hint">A Google Naptár foglalóoldalának címe: Foglalási oldal → Megosztás → Webhelyre ágyazás → '
+            + 'Beágyazott foglalási oldal kódjából a <code>https://calendar.google.com/calendar/appointments/schedules/…</code> rész '
+            + '(a <code>?gv=true</code> elhagyható). A rövid <code>calendar.app.google</code> link is működik, de akkor a naptár nem '
+            + 'az oldalon jelenik meg, hanem új lapon nyílik.</p>'
+          : '<p class="hint">Teljes cím: <code>https://instagram.com/felhasznalonev</code> · '
+            + '<code>https://m.me/oldalneve</code> · <code>tel:+36701234567</code> · '
+            + '<code>mailto:cim@example.com</code></p>');
       hrefInput = hw.querySelector('input');
       hrefInput.value = href;
       hrefInput.addEventListener('input', function () {

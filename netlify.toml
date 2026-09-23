@@ -16,7 +16,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-    Content-Security-Policy = "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://connect.facebook.net; frame-src https://www.facebook.com; form-action 'self'; frame-ancestors 'self'; base-uri 'self'"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://connect.facebook.net; frame-src https://www.facebook.com https://calendar.google.com; form-action 'self'; frame-ancestors 'self'; base-uri 'self'"
 
 # Képek, betűk, CSS/JS: hosszú cache (a fájlnév változtatásával frissül)
 [[headers]]
@@ -145,6 +145,12 @@
 [[redirects]]
   from = "/szemelyi-edzes-arak-gyor.html"
   to = "/szemelyi-edzes-arak-gyor"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/foglalas.html"
+  to = "/foglalas"
   status = 301
   force = true
 

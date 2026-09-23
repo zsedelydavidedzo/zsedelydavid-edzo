@@ -254,8 +254,10 @@
   if (ev) ev.textContent = new Date().getFullYear();
 
   /* ------------------------------------------ 11. Süti-hozzájárulás --- */
-  // Csak a hozzájárulás-köteles tartalom (Facebook) vár engedélyre; a döntés
-  // megjegyzése feltétlenül szükséges tárolás. 180 nap után újra megkérdezzük.
+  // Csak a hozzájárulás-köteles külső tartalom vár engedélyre: external = Facebook-
+  // vélemények, booking = Google Naptár foglaló. A döntés megjegyzése feltétlenül
+  // szükséges tárolás. 180 nap után újra megkérdezzük. A „booking” mező előtti
+  // (csak a Facebookról szóló) döntések érvényesek maradnak, a naptárhoz nem adnak engedélyt.
   var CK_KEY = 'zd_consent';
   var CK_VERSION = 1;
   var CK_MAX_AGE = 180 * 24 * 60 * 60 * 1000;
@@ -270,9 +272,14 @@
 
   var ck = null;
 
-  function setConsent(external) {
-    var hadExternal = !!(consent && consent.external);
-    consent = { v: CK_VERSION, date: new Date().toISOString(), external: !!external };
+  function hasConsent(key) { return !!(consent && consent[key]); }
+
+  function setConsent(choice) {
+    var hadExternal = hasConsent('external');
+    consent = {
+      v: CK_VERSION, date: new Date().toISOString(),
+      external: !!choice.external, booking: !!choice.booking
+    };
     try { localStorage.setItem(CK_KEY, JSON.stringify(consent)); } catch (e) {}
     hideBanner();
     // a már betöltött Facebook-tartalmat csak újratöltéssel lehet eltávolítani
@@ -301,8 +308,9 @@
     ck.innerHTML =
       '<p class="ck-ttl" id="ck-ttl">Sütik és külső tartalom</p>' +
       '<p class="ck-txt" id="ck-txt">Az oldal nem használ nyomkövető, statisztikai vagy hirdetési sütiket. ' +
-      'A Vélemények résznél élő Facebook-tartalmat jeleníthetünk meg, amely a Meta sütijeit használja — ' +
-      'ezt csak a hozzájárulásoddal töltjük be. <a href="/adatkezeles#sutik">Részletek</a></p>' +
+      'A Vélemények résznél élő Facebook-tartalmat, az Időpontfoglalás oldalon a Google Naptár foglalóját jeleníthetjük meg; ' +
+      'ezek a Meta, illetve a Google sütijeit használják — csak a hozzájárulásoddal töltjük be őket. ' +
+      '<a href="/adatkezeles#sutik">Részletek</a></p>' +
       '<div class="ck-prefs" id="ck-prefs" hidden>' +
         '<div class="ck-row"><div><b>Feltétlenül szükséges</b>' +
           '<span>A süti-döntésed megjegyzése a böngésződben (180 napig). Hozzájárulást nem igényel, nem kapcsolható ki.</span></div>' +
@@ -311,6 +319,10 @@
           '<span>A Facebook-értékelések élő beágyazása. Bekapcsolás esetén a Meta Platforms Ireland Ltd. sütiket helyezhet el, ' +
           'és megkapja többek között az IP-címedet és a böngésződ adatait — akkor is, ha nincs Facebook-fiókod.</span></div>' +
           '<input type="checkbox" class="ck-switch" id="ck-ext"></label>' +
+        '<label class="ck-row" for="ck-bk"><div><b>Külső tartalom — Google Naptár</b>' +
+          '<span>Az időpontfoglaló naptár beágyazása az Időpontfoglalás oldalon. Bekapcsolás esetén a Google Ireland Ltd. sütiket helyezhet el, ' +
+          'és megkapja többek között az IP-címedet és a böngésződ adatait — akkor is, ha nincs Google-fiókod.</span></div>' +
+          '<input type="checkbox" class="ck-switch" id="ck-bk"></label>' +
       '</div>' +
       '<div class="ck-btns">' +
         '<button type="button" class="ck-btn" data-ck="reject">Elutasítom</button>' +
@@ -319,14 +331,18 @@
         '<button type="button" class="ck-link" data-ck="prefs" aria-expanded="false" aria-controls="ck-prefs">Beállítások</button>' +
       '</div>';
 
-    ck.querySelector('#ck-ext').checked = !!(consent && consent.external);
+    ck.querySelector('#ck-ext').checked = hasConsent('external');
+    ck.querySelector('#ck-bk').checked = hasConsent('booking');
     ck.addEventListener('click', function (e) {
       var b = e.target.closest('[data-ck]');
       if (!b) return;
       var a = b.getAttribute('data-ck');
-      if (a === 'accept') setConsent(true);
-      else if (a === 'reject') setConsent(false);
-      else if (a === 'save') setConsent(ck.querySelector('#ck-ext').checked);
+      if (a === 'accept') setConsent({ external: true, booking: true });
+      else if (a === 'reject') setConsent({ external: false, booking: false });
+      else if (a === 'save') setConsent({
+        external: ck.querySelector('#ck-ext').checked,
+        booking: ck.querySelector('#ck-bk').checked
+      });
       else if (a === 'prefs') togglePrefs();
     });
 
@@ -432,7 +448,9 @@
     }
 
     fbFrame.addEventListener('click', function (e) {
-      if (e.target.closest('[data-consent-external]')) setConsent(true);
+      if (e.target.closest('[data-consent-external]')) {
+        setConsent({ external: true, booking: hasConsent('booking') });
+      }
     });
     var fbResize;
     window.addEventListener('resize', function () {
@@ -447,6 +465,74 @@
 
     document.addEventListener('zd:consent', startFb);
     startFb();
+  }
+
+  /* ------------------- 13. Időpontfoglaló naptár (csak hozzájárulással) --- */
+  // A foglalási link egyetlen helyen van: a foglalas.html #bk-link hivatkozásában
+  // (az admin panelen is átírható). Beágyazni csak a teljes
+  // calendar.google.com/calendar/appointments/schedules/… címet lehet; a rövid
+  // calendar.app.google/… link csak új lapon nyitható meg.
+  var bkFrame = document.getElementById('bk-frame');
+  var bkLink = document.getElementById('bk-link');
+  if (bkFrame && bkLink) {
+    var bkUrl = (bkLink.getAttribute('href') || '').trim();
+    var bkEmbeddable = /^https:\/\/calendar\.google\.com\/calendar\/(u\/\d+\/)?appointments\/schedules\/[\w=-]{10,}/.test(bkUrl);
+    var bkShortLink = /^https:\/\/calendar\.app\.google\/\w+/.test(bkUrl);
+    var bkIcon = bkFrame.querySelector('.bk-ico');
+    var bkPlaceholder = bkFrame.innerHTML;
+
+    var bkBox = function (title, text) {
+      return '<div class="bk-consent">' + (bkIcon ? bkIcon.outerHTML : '') +
+        '<p class="bk-ttl">' + title + '</p><p>' + text + '</p></div>';
+    };
+
+    if (!bkEmbeddable && !bkShortLink) {
+      // még nincs beállítva érvényes foglalási link
+      bkFrame.innerHTML = bkBox('Hamarosan',
+        'Az online foglalás hamarosan indul. Addig hívj a <a href="tel:+36702818799">+36 70 281 8799</a> számon, ' +
+        'vagy írj a <a href="/#kapcsolat">kapcsolatfelvételi űrlapon</a>, és egyeztetünk egy időpontot.');
+      bkLink.parentNode.hidden = true;
+    } else if (!bkEmbeddable) {
+      // rövid link: nem ágyazható be, a Google oldala új lapon nyílik
+      bkFrame.innerHTML = bkBox('Szabad időpontok',
+        'A szabad időpontokat és a foglalást a Google Naptár oldalán, új lapon találod.');
+      var bkBtn = document.createElement('a');
+      bkBtn.className = 'btn btn-primary';
+      bkBtn.href = bkUrl;
+      bkBtn.target = '_blank';
+      bkBtn.rel = 'noopener';
+      bkBtn.textContent = 'Foglalás megnyitása';
+      bkFrame.querySelector('.bk-consent').appendChild(bkBtn);
+      bkLink.parentNode.hidden = true;
+    } else {
+      var bkSync = function () {
+        if (hasConsent('booking')) {
+          if (bkFrame.querySelector('iframe')) return;
+          var src = new URL(bkUrl);
+          src.searchParams.set('gv', 'true');
+          var ifr = document.createElement('iframe');
+          ifr.src = src.toString();
+          ifr.title = 'Időpontfoglalás – Zsédely Dávid naptára (Google Naptár)';
+          // a Google-oldal fejléce átlátszó: betöltés után a „Naptár betöltése…” felirat eltűnik
+          ifr.addEventListener('load', function () { bkFrame.classList.add('is-ready'); });
+          bkFrame.classList.remove('is-ready');
+          bkFrame.innerHTML = '';
+          bkFrame.appendChild(ifr);
+          bkFrame.classList.add('is-on');
+        } else if (bkFrame.classList.contains('is-on')) {
+          // visszavont hozzájárulás: a naptár eltűnik, a helykitöltő visszakerül
+          bkFrame.classList.remove('is-on');
+          bkFrame.innerHTML = bkPlaceholder;
+        }
+      };
+      bkFrame.addEventListener('click', function (e) {
+        if (e.target.closest('[data-consent-booking]')) {
+          setConsent({ external: hasConsent('external'), booking: true });
+        }
+      });
+      document.addEventListener('zd:consent', bkSync);
+      bkSync();
+    }
   }
 
 })();

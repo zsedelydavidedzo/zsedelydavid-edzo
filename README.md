@@ -15,7 +15,7 @@ Statikus weboldal (HTML + CSS + JavaScript), build lépés nélkül.
 6. [Szerkesztés admin panelről](#6-szerkesztés-admin-panelről)
 7. [Szerkesztés kódból (VS Code + Git)](#7-szerkesztés-kódból-vs-code--git)
 8. [Kitöltendő adatok élesítés előtt](#8-kitöltendő-adatok-élesítés-előtt)
-9. [Google Naptár](#9-google-naptár)
+9. [Online időpontfoglalás (Google Naptár)](#9-online-időpontfoglalás-google-naptár)
 
 ---
 
@@ -27,6 +27,7 @@ zsedelydavid-edzo/
 ├── adatkezeles.html        Adatkezelési tájékoztató (KITÖLTENDŐ sablon)
 ├── aszf.html               ÁSZF (KITÖLTENDŐ sablon)
 ├── koszonjuk.html          Az űrlap elküldése utáni oldal
+├── foglalas.html           Online időpontfoglalás (beágyazott Google Naptár)
 ├── 404.html                Hibaoldal
 ├── css/style.css           Minden stílus (design system + animációk)
 ├── js/main.js              Menü, animációk, számláló, galéria-nagyító
@@ -274,21 +275,84 @@ A látványtervben ezek helykitöltők. **Keresd rá a fájlokban, és cseréld 
 
 ---
 
-## 9. Google Naptár
+## 9. Online időpontfoglalás (Google Naptár)
 
-Jelenleg nincs beépítve. A tervezett megoldás egy **„Foglalj időpontot" gomb**,
-ami a Google Appointment Schedule (Google Naptár időpontfoglaló) oldalára visz.
+A **https://zsedelydavid.hu/foglalas** oldalon a látogatók Dávid Google Naptárából
+foglalnak időpontot. Minden „Időpontot foglalok”, „Ingyenes konzultáció” és csomaggomb
+ide visz; a „Kérdésem van” gombok továbbra is az űrlapra.
 
-Amikor sorra kerül:
+**Hogyan működik**
 
-1. Google Naptár → **Létrehozás → Időpontfoglalási ütemezés**
-2. Beállítod az elérhető sávokat és az edzés hosszát
-3. A kapott nyilvános linket beillesztjük a CTA és Kapcsolat blokkba
+- A foglalóoldal a `zsedelydavid.edzo@gmail.com` fiók Google Naptár
+  *időpontfoglalási ütemezése* (Appointment schedule). A foglalás azonnal bekerül a
+  naptárba, a vendég visszaigazoló e-mailt kap, és abban le is tudja mondani.
+- A naptár **csak hozzájárulással töltődik be** (mint a Facebook-vélemények): a süti-ablak
+  „Elfogadom” gombjával, a beállításokban („Külső tartalom — Google Naptár”), vagy az oldalon
+  a „Naptár betöltése” gombbal. Hozzájárulás nélkül a „Megnyitás a Google Naptárban”
+  gomb új lapon nyitja meg a Google foglalóoldalát.
+- A `netlify.toml` biztonsági fejléce (CSP) ezért engedi a `https://calendar.google.com`
+  keretet. Google-szkript nem töltődik be.
 
-Ehhez Google Workspace vagy sima Gmail fiók is elég (a sima fióknál egy
-foglalási oldal hozható létre).
+**A jelenlegi foglalási oldal** (létrehozva 2026. 09. 23.)
 
----
+- Beágyazási cím: `https://calendar.google.com/calendar/appointments/schedules/AcZssZ3o8dwutD9KiqqzPkQZslFUmpIR_zltMK639AzHqldPfC3WEfQzAtnh9cwiXebES88eV65z_eZe`
+- Rövid link (pl. Instagram-bióba, ha nem a weboldalra mutatnál): <https://calendar.app.google/zaRsxQ9bKndei5oM7>
+
+**A foglalási link helye — egyetlen hely**
+
+A link a `foglalas.html` `id="bk-link"` gombjában van, az admin panelen is átírható:
+*Admin → Időpontfoglalás → Foglalási link (Google Naptár) → Hova vezet*.
+
+- Beágyazáshoz a teljes cím kell:
+  `https://calendar.google.com/calendar/appointments/schedules/AcZssZ…`
+  (Google Naptár → a foglalási oldal → **Megosztás → Webhelyre ágyazás → Beágyazott
+  foglalási oldal** → a kódból a `src="…"` rész; a végén a `?gv=true` elhagyható).
+- A rövid `https://calendar.app.google/…` link is működik, de akkor a naptár nem az
+  oldalon jelenik meg, hanem egy gomb új lapon nyitja meg.
+- Amíg nincs érvényes link, az oldal „Hamarosan” üzenetet és elérhetőségeket mutat.
+
+**A foglalási ütemezés beállítása (egyszeri, számítógépen)**
+
+1. <https://calendar.google.com> a `zsedelydavid.edzo@gmail.com` fiókkal →
+   **Létrehozás → Időpontfoglalási ütemezés**
+2. Ajánlott beállítások:
+
+| Beállítás | Érték |
+|---|---|
+| Cím | Személyi edzés – Zsédely Dávid |
+| Időtartam | 60 perc |
+| Általános elérhetőség | H–P 6:00–20:00, Szo 8:00–14:00 — **szűkítsd a valóban szabad sávokra** |
+| Időzóna | Közép-európai idő – Budapest |
+| Foglalási időablak | legfeljebb 30 nappal előre · legalább 12 órával előtte |
+| Foglalt időpontok | puffer nélkül; napi maximum nélkül (igény szerint állítható) |
+| Naptár | elsődleges, **„Elérhetőség ellenőrzése a naptárban” bekapcsolva** |
+| Helyszín | Személyes találkozó: Gymtronic Győr, Fehérvári út 10., 9028 Győr (kültéri edzésnél a megbeszélt edzőpark) |
+| Leírás | lásd lent |
+| Foglalási űrlap | az alapmezőkön (név, e-mail) felül: **Telefonszám** (kötelező), **Megjegyzés** (nem kötelező) |
+
+Leírás a foglalóoldalra:
+
+> 60 perces személyi edzés Győrben, a Gymtronic teremben vagy egy kültéri edzőparkban.
+> Ha most jössz először, az első alkalom (konzultáció + próbaedzés) ingyenes — írd be a
+> megjegyzésbe. Páros edzésnél írd be a párod nevét. Lemondás vagy áthelyezés legalább
+> 24 órával előtte díjmentes. Feltételek: zsedelydavid.hu/aszf
+
+3. **Mentés**, majd a link kimásolása (lásd fent), és beillesztése az admin panelen.
+
+**Fontos a használathoz**
+
+- **Minden edzés legyen ebben a Google Naptárban.** A foglaló csak az itt lévő
+  eseményeket látja foglaltnak; ami máshol van (papír, másik naptár), arra dupla foglalás jöhet.
+- Szabadság, betegség: a naptárban egész napos „Elfoglalt” esemény, vagy a foglalási
+  ütemezésben *Módosított elérhetőség* az adott napra.
+- Az ingyenes Gmail-fiókkal **egy** foglalási oldal lehet, **nincs automatikus
+  emlékeztető e-mail** és **nincs e-mail-ellenőrzés**. Ezekhez Google One Premium /
+  Google AI Pro vagy Google Workspace előfizetés kell.
+- A lemondást a vendég a visszaigazoló e-mailből végezheti el; az időpont ilyenkor
+  magától újra szabad lesz. A 24 órás szabályt a rendszer nem kényszeríti ki — erre az
+  ÁSZF 8. pontja vonatkozik.
+- Az adatkezelési tájékoztató szerint a foglalási adatokat az edzés után legfeljebb
+  1 évig őrizzük: évente egyszer érdemes a régi foglalásokat törölni a naptárból.
 
 ## Támogatás
 
